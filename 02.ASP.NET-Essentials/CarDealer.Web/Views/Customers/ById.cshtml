@@ -1,0 +1,19 @@
+﻿@model CarDealer.Web.Models.Customers.CustomerByIdDetailsModel
+@{
+    ViewData["Title"] = "ById";
+}
+
+<h2>Customer By Id</h2>
+<table class="table table-bordered table-hover">
+    <tr>
+        <th>Name</th>
+        <th>Total Cars</th>
+        <th>Total Spend Money</th>
+    </tr>
+    <tr>
+        <td>@Model.Customer.Name</td>
+        <td>@Model.Customer.TotalCars</td>
+        <td>@Model.Customer.MoneySpend</td>
+    </tr>
+</table>
+

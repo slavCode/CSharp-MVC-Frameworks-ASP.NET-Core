@@ -1,0 +1,24 @@
+﻿@model CarDealer.Web.Models.Suppliers.AllSuppliersModel
+@{
+    ViewData["Title"] = "All";
+}
+<h2>All @Model.Type.ToString() Suppliers</h2>
+<table class="table">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Number Of Parts</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var supplier in Model.SuppliersByType)
+    {
+        <tr>
+            <td>@supplier.Id</td>
+            <td>@supplier.Name</td>
+            <td>@supplier.NumberOfParts</td>
+        </tr>
+    }
+    </tbody>
+</table>

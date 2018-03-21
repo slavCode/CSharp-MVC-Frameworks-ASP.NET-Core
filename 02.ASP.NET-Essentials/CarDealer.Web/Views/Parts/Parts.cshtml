@@ -1,0 +1,27 @@
+﻿@model CarDealer.Web.Models.Parts.PartsByCarModel
+@{
+    ViewData["Title"] = "Parts By A Car Model";
+}
+<div>
+    <h4><strong>Make: </strong>@Model.Car.Make</h4>
+    <h4><strong>Model: </strong>@Model.Car.Model</h4>
+    <h4><strong>Travelled Distance: </strong>@Model.Car.TravelledDistance</h4>
+</div>
+<table class="table table-bordered table-hover ">
+    <tr>
+        <th>Name</th>
+        <th>Price</th>
+    </tr>
+    <br/>
+    <h3>Car Parts</h3>
+    @foreach (var part in Model.Parts)
+    {
+        <tr>
+            <td style=
+                "white-space: nowrap; overflow: hidden;  text-overflow: ellipsis; max-width: 10em">
+                @part.Name
+            </td>
+            <td>@part.Price</td>
+        </tr>
+    }
+</table>

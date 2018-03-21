@@ -1,0 +1,25 @@
+﻿@model CarDealer.Web.Models.Customers.AllCustomersModel
+@{
+    ViewData["Title"] = "All Customers";
+}
+<h2>@ViewData["Title"]</h2>
+<h4><em>In  @Model.OrderDirection.ToString().ToLower() order.</em></h4>
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Birthday</th>
+            <th>Is Young Driver</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in Model.Customers)
+        {
+            <tr>
+                <td>@customer.Name</td>
+                <td>@customer.BirthDate.ToShortDateString()</td>
+                <td>@(customer.IsYoungDriver == true ? "Yes" : "No")</td>
+            </tr>
+        }
+    </tbody>
+</table>
