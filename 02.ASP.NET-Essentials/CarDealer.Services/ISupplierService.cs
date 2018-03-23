@@ -6,6 +6,8 @@
 
     public interface ISupplierService
     {
-        IEnumerable<SupplierModel> All(SupplierType type);
+        IEnumerable<SupplierWithPartsModel> AllWithParts(SupplierType type);
+
+        IEnumerable<SupplierModel> All();
     }
 }

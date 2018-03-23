@@ -32,9 +32,10 @@
             services.AddTransient<ICustomerService, CustomerService>();
             services.AddTransient<ICarService, CarService>();
             services.AddTransient<ISupplierService, SupplierService>();
-            services.AddTransient<IPartService, PartService>();
             services.AddTransient<ISalesService, SalesService>();
-            
+            services.AddTransient<IPartService, PartService>();
+
+
             services.AddMvc();
         }
 

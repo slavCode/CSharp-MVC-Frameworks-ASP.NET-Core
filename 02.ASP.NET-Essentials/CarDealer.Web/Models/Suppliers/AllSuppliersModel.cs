@@ -6,7 +6,7 @@
 
     public class AllSuppliersModel
     {
-        public IEnumerable<SupplierModel> SuppliersByType { get; set; }
+        public IEnumerable<SupplierWithPartsModel> SuppliersByType { get; set; }
 
         public SupplierType Type { get; set; }
     }

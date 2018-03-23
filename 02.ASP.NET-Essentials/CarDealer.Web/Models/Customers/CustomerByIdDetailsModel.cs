@@ -4,6 +4,6 @@
 
     public class CustomerByIdDetailsModel
     {
-        public CustomerByIdModel Customer { get; set; }
+        public CustomerModel Customer { get; set; }
     }
 }

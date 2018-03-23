@@ -15,7 +15,7 @@
             this.db = db;
         }
 
-        public IEnumerable<SupplierModel> All(SupplierType type)
+        public IEnumerable<SupplierWithPartsModel> AllWithParts(SupplierType type)
         {
             var suppliers = db.Suppliers.AsQueryable();
 
@@ -35,7 +35,7 @@
             }
 
             return suppliers
-                .Select(s => new SupplierModel()
+                .Select(s => new SupplierWithPartsModel()
                 {
                     Name = s.Name,
                     Id = s.Id,
@@ -43,6 +43,19 @@
                 })
                 .ToList();
 
+        }
+
+        public IEnumerable<SupplierModel> All()
+        {
+            return this.db
+                .Suppliers
+                .OrderBy(s => s.Name)
+                .Select(s => new SupplierModel
+                {
+                    Name = s.Name,
+                    Id = s.Id
+                })
+                .ToList();
         }
     }
 }

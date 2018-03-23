@@ -9,6 +9,6 @@
 
         IEnumerable<CarModel> ByMake(string make);
 
-        CarModel ByCarId(int carId);
+        IEnumerable<CarWithPartsModel> WithParts();
     }
 }

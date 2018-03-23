@@ -1,6 +1,6 @@
-﻿@model CarDealer.Web.Models.Customers.AllCustomersModel
+﻿@model AllCustomersModel
 @{
-    ViewData["Title"] = "All Customers";
+    ViewData["Title"] = "AllWithParts Customers";
 }
 <h2>@ViewData["Title"]</h2>
 <h4><em>In  @Model.OrderDirection.ToString().ToLower() order.</em></h4>
@@ -19,6 +19,7 @@
                 <td>@customer.Name</td>
                 <td>@customer.BirthDate.ToShortDateString()</td>
                 <td>@(customer.IsYoungDriver == true ? "Yes" : "No")</td>
+                <td><a class="btn btn-warning" href="/customers/edit/@customer.Id">Edit</a></td>
             </tr>
         }
     </tbody>

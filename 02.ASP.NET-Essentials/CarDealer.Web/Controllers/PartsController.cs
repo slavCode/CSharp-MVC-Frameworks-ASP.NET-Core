@@ -1,36 +1,62 @@
 ﻿namespace CarDealer.Web.Controllers
 {
-    using Data;
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Parts;
     using Services;
-    using Services.Implementaions;
+    using System;
+    using System.Linq;
 
     public class PartsController : Controller
     {
-        private readonly IPartService parts;
-        private readonly ICarService cars;
+        private const int PageSize = 25;
 
-        public PartsController(CarDealerDbContext db)
+        private readonly IPartService parts;
+        private readonly ISupplierService suppliers;
+
+        public PartsController(IPartService parts, ISupplierService suppliers)
         {
-            this.parts = new PartService(db);
-            this.cars = new CarService(db);
+            this.parts = parts;
+            this.suppliers = suppliers;
         }
 
-        [Route("cars/{id}/parts")]
-        public IActionResult Parts(string id)
+        public IActionResult All(int page = 1)
         {
-            var cardId = int.Parse(id);
-
-            var partsByCarId = this.parts.ByCarId(cardId);
-            var carByCarId = this.cars.ByCarId(cardId);
-
-            return this.View(new PartsByCarModel
+            return View(new PartPageListingModel
             {
-                Parts = partsByCarId,
-                Car = carByCarId
+                CurrentPage = page,
+                Parts = this.parts.All(PageSize, page),
+                TotalPages = (int)Math.Ceiling(this.parts.Total() / (double)PageSize)
             });
+        }
 
+        public IActionResult Create()
+        {
+            return View(new PartFormModel
+            {
+                AllSuppliers = this.suppliers.All().Select(s => new SelectListItem
+                {
+                    Text = s.Name,
+                    Value = s.Id.ToString()
+                })
+            });
+        }
+
+        [HttpPost]
+        public IActionResult Create(PartFormModel model)
+        {
+            var quantity = model.Quantity > 0 ? model.Quantity : 1;
+
+            this.parts.Create(model.Name, model.Price, model.SupplierId, quantity);
+
+            return RedirectToAction(nameof(All));
+        }
+
+        public IActionResult Delete(int id)
+        {
+            this.parts.Delete(id);
+
+            return RedirectToAction(nameof(All));
         }
     }
 }

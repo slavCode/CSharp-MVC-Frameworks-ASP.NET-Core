@@ -1,4 +1,4 @@
-﻿@model CarDealer.Web.Models.Sales.AllSalesModel
+﻿@model AllSalesModel
 @{
     ViewData["Title"] = "Discounted";
 }
@@ -11,7 +11,7 @@
         <th>Car Travelled Distance</th>
         <th>Customer Name</th>
         <th>Price</th>
-        <th>Price With Discount</th>
+        <th>Discounted Price</th>
         <th>Discount</th>
     </tr>
     @foreach (var sale in Model.Sales)
@@ -21,9 +21,10 @@
             <td>@sale.CarModel</td>
             <td>@(sale.CarTravelledDistance / 1000) Km.</td>
             <td>@sale.CustomerName</td>
-            <td>@sale.TotalPrice</td>
-            <td>@sale.DiscountedPrice</td>
+            <td>$@sale.TotalPrice</td>
+            <td>$@sale.DiscountedPrice</td>
             <td>@sale.Discount%</td>
+            <td><a href="/sales/@sale.Id">More Details</a></td>
         </tr>
     }
 </table>

@@ -23,7 +23,7 @@
                 ? SupplierType.Importers 
                 : SupplierType.Local;
 
-           var suppliersByType =  this.suppliers.All(supplierType);
+           var suppliersByType =  this.suppliers.AllWithParts(supplierType);
 
             return View(new AllSuppliersModel()
             {

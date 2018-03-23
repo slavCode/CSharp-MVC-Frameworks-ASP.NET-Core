@@ -1,11 +1,12 @@
 ﻿namespace CarDealer.Web.Controllers
 {
     using Data;
-    using Microsoft.AspNetCore.Mvc;
     using Models.Cars;
+    using Microsoft.AspNetCore.Mvc;
     using Services;
     using Services.Implementaions;
 
+    [Route("cars")]
     public class CarsController : Controller
     {
         private readonly ICarService cars;
@@ -15,7 +16,7 @@
             this.cars = new CarService(db);
         }
 
-        [Route("cars/{make}")]
+        [Route("{make}")]
         public IActionResult ByMake(string make)
         {
             var orderedCars = this.cars.ByMake(make);
@@ -27,15 +28,12 @@
             });
         }
 
-        [Route("cars/all")]
+        [Route(nameof(All))]
         public IActionResult All()
         {
-            var allCars = this.cars.All();
+            var carsWithParts = this.cars.WithParts();
 
-            return this.View(new AllCarsModel
-            {
-                Cars = allCars
-            });
+            return this.View(carsWithParts);
         }
     }
 }

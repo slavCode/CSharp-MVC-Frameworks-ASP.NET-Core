@@ -2,6 +2,7 @@
 {
     using Data;
     using Models.Cars;
+    using Models.Parts;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -45,18 +46,21 @@
             return orderedCars;
         }
 
-        public CarModel ByCarId(int carId)
+        public IEnumerable<CarWithPartsModel> WithParts()
         {
-            return db
+            return this.db
                 .Cars
-                .Where(c => c.Id == carId)
-                .Select(c => new CarModel
+                .Select(c => new CarWithPartsModel
                 {
-                    Model = c.Model,
                     Make = c.Make,
-                    TravelledDistance = c.TravelledDistance
+                    Model = c.Model,
+                    TravelledDistance = c.TravelledDistance,
+                    Parts = c.Parts.Select(p => new PartModel
+                    {
+                        Price = p.Part.Price, Name = p.Part.Name
+                    })
                 })
-                .FirstOrDefault();
+                .ToList();
         }
     }
 }

@@ -3,7 +3,8 @@
     using Microsoft.AspNetCore.Mvc;
     using Models.Sales;
     using Services;
-
+    
+    [Route("sales")]
     public class SalesController: Controller
     {
         private readonly ISalesService sales;
@@ -13,7 +14,7 @@
             this.sales = sales;
         }
 
-        [Route("sales")]
+        [Route("")]
         public IActionResult All()
         {
             var allSales = this.sales.All();
@@ -24,8 +25,8 @@
             });
         }
 
-        [Route("sales/{id}")]
-        public IActionResult ById(string id)
+        [Route("{id}")]
+        public IActionResult Details(string id)
         {
             var saleId = int.Parse(id);
 
@@ -38,7 +39,7 @@
             });
         }
 
-        [Route("sales/discounted")]
+        [Route(nameof(Discounted))]
         public IActionResult Discounted()
         {
             var discountedSales = this.sales.Discounted();
@@ -49,7 +50,7 @@
             });
         }
 
-        [Route("sales/discounted/{percent}")]
+        [Route("discounted/{percent}")]
         public IActionResult DiscountedByPercent(string percent)
         {
             var percentAsDouble = double.Parse(percent);
