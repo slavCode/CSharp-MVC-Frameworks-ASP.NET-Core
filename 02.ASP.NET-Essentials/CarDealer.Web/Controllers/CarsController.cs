@@ -2,6 +2,7 @@
 {
     using System.Linq;
     using Data;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Cars;
@@ -42,6 +43,7 @@
             return this.View(carsWithParts);
         }
 
+        [Authorize]
         [Route(nameof(Create))]
         public IActionResult Create()
         {
@@ -56,6 +58,7 @@
 
         }
 
+        [Authorize]
         [HttpPost]
         [Route(nameof(Create))]
         public IActionResult Create(CarFormModel formModel)

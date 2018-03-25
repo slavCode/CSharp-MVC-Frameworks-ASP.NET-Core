@@ -66,8 +66,15 @@
                 .ToList();
         }
 
-        public void Create(string make, string model, long travelledDistance, IList<int> partsIds)
+        public void Create(string make, string model, long travelledDistance, IList<int> partIds)
         {
+            var existingPartIds = this.db
+                .Parts
+                .Where(p => partIds.Contains(p.Id))
+                .Select(p => p.Id)
+                .ToList();
+
+
             var car = new Car
             {
                 Make = make,
@@ -76,17 +83,10 @@
 
             };
 
-            for (int i = 0; i < partsIds.Count; i++)
+            for (int i = 0; i < existingPartIds.Count; i++)
             {
-                var partCar = new PartCars
-                {
-                    CarId = car.Id,
-                    PartId = partsIds[i]
-                };
-
-                car.Parts.Add(partCar);
+                car.Parts.Add(new PartCars { PartId = existingPartIds[i] });
             }
-
 
             this.db.Cars.Add(car);
             this.db.SaveChanges();

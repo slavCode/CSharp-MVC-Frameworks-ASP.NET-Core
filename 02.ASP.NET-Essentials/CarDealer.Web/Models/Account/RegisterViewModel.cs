@@ -5,6 +5,11 @@
     public class RegisterModel
     {
         [Required]
+        [MinLength(4)]
+        [MaxLength(50)]
+        public string Username { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
