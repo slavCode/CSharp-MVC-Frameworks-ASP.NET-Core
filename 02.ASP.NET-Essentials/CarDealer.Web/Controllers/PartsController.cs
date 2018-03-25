@@ -6,6 +6,7 @@
     using Services;
     using System;
     using System.Linq;
+    using Services.Models.Parts;
 
     public class PartsController : Controller
     {
@@ -55,6 +56,27 @@
         public IActionResult Delete(int id)
         {
             this.parts.Delete(id);
+
+            return RedirectToAction(nameof(All));
+        }
+
+
+        public IActionResult Edit(int id)
+        {
+            var part = this.parts.ById(id);
+
+            return View(new PartFormModel
+            {
+                Name = part.Name,
+                Price = part.Price,
+                Quantity = part.Quantity
+            });
+        }
+
+        [HttpPost]
+        public IActionResult Edit(PartEditModel model)
+        {
+            this.parts.Edit(model.Id, model.Price, model.Quantity);
 
             return RedirectToAction(nameof(All));
         }

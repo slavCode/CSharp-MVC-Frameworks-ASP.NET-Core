@@ -1,8 +1,14 @@
 ﻿@model IEnumerable<CarWithPartsModel>
 @{
-    ViewData["Title"] = "AllWithParts Cars With Their Parts";
+    ViewData["Title"] = "All Cars With Their Parts";
 }
+
+
 <h2>@ViewData["Title"]</h2>
+<div>
+    <a class="btn btn-primary" href="/cars/create">Add Car</a>
+</div>
+<br/>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>

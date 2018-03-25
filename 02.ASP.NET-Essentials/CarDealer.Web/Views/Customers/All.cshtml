@@ -1,9 +1,13 @@
 ﻿@model AllCustomersModel
 @{
-    ViewData["Title"] = "AllWithParts Customers";
+    ViewData["Title"] = "All Customers";
 }
 <h2>@ViewData["Title"]</h2>
 <h4><em>In  @Model.OrderDirection.ToString().ToLower() order.</em></h4>
+<div>
+    <a class="btn btn-primary" href="/customers/create">Add Customer</a>
+</div>
+<br/>
 <table class="table table-bordered table-hover">
     <thead>
         <tr>

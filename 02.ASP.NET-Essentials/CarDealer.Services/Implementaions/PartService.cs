@@ -64,5 +64,33 @@
             this.db.Parts.Remove(part);
             this.db.SaveChanges();
         }
+
+        public void Edit(int id, decimal price, int quntity)
+        {
+            var part = this.db
+                .Parts
+                .FirstOrDefault(p => p.Id == id);
+
+            part.Price = price;
+            part.Quantity = quntity;
+
+            this.db.SaveChanges();
+        }
+
+        public PartListingModel ById(int id)
+        {
+            return this.db
+                .Parts
+                .Where(p => p.Id == id)
+                .Select(p => new PartListingModel()
+                {
+                    Name = p.Name,
+                    Price = p.Price,
+                    Quantity = p.Quantity,
+                    SupplierName = p.Supplier.Name
+
+                })
+                .FirstOrDefault();
+        }
     }
 }
