@@ -1,15 +1,13 @@
 ﻿namespace CarDealer.Web.Controllers
 {
-    using System.Linq;
     using Data;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Cars;
-    using Models.Parts;
     using Services;
     using Services.Implementaions;
-    using Services.Models.Cars;
+    using System.Linq;
 
     [Route("cars")]
     public class CarsController : Controller
@@ -69,8 +67,6 @@
             }
 
             var partsIds = formModel.PartIds;
-
-
 
             this.cars.Create(formModel.Make, formModel.Model, formModel.TravelledDistance, partsIds);
 

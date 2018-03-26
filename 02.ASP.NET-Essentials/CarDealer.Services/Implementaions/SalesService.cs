@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Data.Models;
 
     public class SalesService : ISalesService
     {
@@ -13,6 +14,55 @@
         public SalesService(CarDealerDbContext db)
         {
             this.db = db;
+        }
+
+        public SaleReviewModel SaleReview(int carId, int customerId, double discount)
+        {
+            var car = this.db
+                .Cars
+                .Where(c => c.Id == carId)
+                .Select(c => new
+                {
+                    Name = $"{c.Make} {c.Model}",
+                    Price = c.Parts.Sum(cp => cp.Part.Price)
+                })
+                .FirstOrDefault();
+
+            var customer = this.db
+                .Customers
+                .FirstOrDefault(cu => cu.Id == customerId);
+
+            var finalDiscount = !customer.IsYoungDriver
+                ? discount
+                : discount + 5;
+
+            var discountAsString = !customer.IsYoungDriver
+                ? $"{discount}%"
+                : $"{discount}% (+5%)";
+
+            return new SaleReviewModel
+            {
+                Price = car.Price,
+                DiscountedPrice = car.Price - (car.Price / 100) * (decimal)finalDiscount,
+                CarId = carId,
+                Car = car.Name,
+                CustomerId = customerId,
+                Customer = customer.Name,
+                DiscountAsString = discountAsString
+            };
+        }
+
+        public void Create(int carId, int customerId, double discount)
+        {
+            var sale = new Sale
+            {
+                CarId = carId,
+                CustomerId = customerId,
+                Discount = discount
+            };
+
+            this.db.Add(sale);
+            this.db.SaveChanges();
         }
 
         public IEnumerable<SaleModel> All()

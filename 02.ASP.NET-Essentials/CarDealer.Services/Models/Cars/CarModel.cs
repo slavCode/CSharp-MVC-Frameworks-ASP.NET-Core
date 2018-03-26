@@ -4,6 +4,8 @@
 
     public class CarModel
     {
+        public int Id { get; set; }
+
         [Required]
         [MinLength(2)]
         [MaxLength(50)]

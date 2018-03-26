@@ -23,6 +23,7 @@
                 .Cars
                 .Select(c => new CarModel
                 {
+                    Id = c.Id,
                     Make = c.Make,
                     Model = c.Model,
                     TravelledDistance = c.TravelledDistance

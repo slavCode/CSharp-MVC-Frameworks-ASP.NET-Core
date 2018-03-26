@@ -1,17 +1,25 @@
 ﻿namespace CarDealer.Web.Controllers
 {
     using Microsoft.AspNetCore.Mvc;
+    using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Sales;
     using Services;
-    
+    using Services.Models.Enums;
+    using Services.Models.Sales;
+    using System.Linq;
+
     [Route("sales")]
-    public class SalesController: Controller
+    public class SalesController : Controller
     {
         private readonly ISalesService sales;
+        private readonly ICarService cars;
+        private readonly ICustomerService customers;
 
-        public SalesController(ISalesService sales)
+        public SalesController(ISalesService sales, ICarService cars, ICustomerService customers)
         {
             this.sales = sales;
+            this.cars = cars;
+            this.customers = customers;
         }
 
         [Route("")]
@@ -62,6 +70,60 @@
                 Percent = percentAsDouble,
                 Sales = discountedSales
             });
+        }
+
+        [Route("create")]
+        public IActionResult Create()
+        {
+            return View(new SalesFormModel
+            {
+                AllCars = this.cars
+                    .All()
+                    .Select(c => new SelectListItem
+                    {
+                        Text = c.Make + " " + c.Model,
+                        Value = c.Id.ToString()
+                    }),
+                AllCustomers = this.customers
+                    .OrderedCustomers(OrderDirection.Ascending)
+                    .Select(cu => new SelectListItem
+                    {
+                        Text = cu.Name,
+                        Value = cu.Id.ToString()
+                    })
+            });
+        }
+
+        [HttpPost]
+        [Route("create")]
+        public IActionResult Create(SalesFormModel formModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction(nameof(Create));
+            }
+
+            var sale = this.sales.SaleReview(formModel.CarId, formModel.CustomerId, formModel.Discount);
+           
+            return RedirectToAction(nameof(Review), formModel);
+        }
+
+        [Route("review")]
+        public IActionResult Review(SalesFormModel formModel)
+        {
+            var sale = this.sales.SaleReview(formModel.CarId, formModel.CustomerId, formModel.Discount);
+
+            return View(sale);
+
+        }
+
+        [HttpPost]
+        [Route("review")]
+        public IActionResult Review(SaleReviewModel saleReviewModel)
+        {
+            this.sales.Create(saleReviewModel.CarId, saleReviewModel.CustomerId, saleReviewModel.Discount);
+
+            return RedirectToAction(nameof(All));
         }
     }
 }
