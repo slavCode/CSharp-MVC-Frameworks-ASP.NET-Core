@@ -7,6 +7,7 @@
     using Services.Models.Enums;
     using Services.Models.Sales;
     using System.Linq;
+    using Microsoft.AspNetCore.Authorization;
 
     [Route("sales")]
     public class SalesController : Controller
@@ -72,6 +73,7 @@
             });
         }
 
+        [Authorize]
         [Route("create")]
         public IActionResult Create()
         {
@@ -94,6 +96,7 @@
             });
         }
 
+        [Authorize]
         [HttpPost]
         [Route("create")]
         public IActionResult Create(SalesFormModel formModel)
@@ -104,10 +107,11 @@
             }
 
             var sale = this.sales.SaleReview(formModel.CarId, formModel.CustomerId, formModel.Discount);
-           
+
             return RedirectToAction(nameof(Review), formModel);
         }
 
+        [Authorize]
         [Route("review")]
         public IActionResult Review(SalesFormModel formModel)
         {
@@ -117,6 +121,7 @@
 
         }
 
+        [Authorize]
         [HttpPost]
         [Route("review")]
         public IActionResult Review(SaleReviewModel saleReviewModel)
