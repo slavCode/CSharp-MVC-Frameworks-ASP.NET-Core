@@ -43,6 +43,17 @@
                     </li>
                     <li class="dropdown">
                         <a class="dropdown-toggle" data-toggle="dropdown" href=".">
+                            Suppliers
+                            <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-area="" asp-controller="Suppliers" asp-action="All">All</a></li>
+                            <li><a asp-area="" asp-controller="Suppliers" asp-action="AllByType" asp-route-type="importers">Importers</a></li>
+                            <li><a asp-area="" asp-controller="Suppliers" asp-action="AllByType" asp-route-type="locals">Locals</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href=".">
                             Sales
                             <span class="caret"></span>
                         </a>

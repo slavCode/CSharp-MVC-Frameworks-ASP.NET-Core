@@ -1,24 +1,34 @@
-﻿@model CarDealer.Web.Models.Suppliers.AllSuppliersModel
+﻿@model IEnumerable<SupplierModel>
 @{
-    ViewData["Title"] = "All";
+    ViewData["Title"] = "All Suppliers";
 }
-<h2>All @Model.Type.ToString() Suppliers</h2>
-<table class="table">
+@{
+    var importer = string.Empty;
+}
+<h2>@ViewData["Title"]</h2>
+<div>
+    <a asp-action="Create" class="btn ">New Supplier</a>
+</div>
+<br />
+<table class="table table-bordered table-hover">
     <thead>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Number Of Parts</th>
-    </tr>
+        <tr>
+            <th>Name</th>
+            <th>Importer</th>
+            <th>Actions</th>
+        </tr>
     </thead>
     <tbody>
-    @foreach (var supplier in Model.SuppliersByType)
-    {
-        <tr>
-            <td>@supplier.Id</td>
-            <td>@supplier.Name</td>
-            <td>@supplier.NumberOfParts</td>
-        </tr>
-    }
+        @foreach (var supplier in Model)
+        {
+            <tr>
+                <td>@supplier.Name</td>
+                <td>@(importer = supplier.IsImporter == true ? "Yes" : "No")</td>
+                <td>
+                    <a class="btn btn-warning" href="/suppliers/edit/@supplier.Id">Edit</a>
+                    <a class="btn btn-danger" href="/suppliers/delete/@supplier.Id">Edit</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>

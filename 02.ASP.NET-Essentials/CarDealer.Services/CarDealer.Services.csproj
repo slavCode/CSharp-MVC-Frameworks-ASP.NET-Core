@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <Compile Remove="Models\Customers\CustomerByIdModel.cs" />
+    <Compile Remove="Models\Suppliers\SupplierListingModel.cs" />
   </ItemGroup>
 
   <ItemGroup>

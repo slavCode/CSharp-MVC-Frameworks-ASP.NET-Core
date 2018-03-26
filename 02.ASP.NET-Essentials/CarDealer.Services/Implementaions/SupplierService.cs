@@ -1,6 +1,7 @@
 ﻿namespace CarDealer.Services.Implementaions
 {
     using Data;
+    using Data.Models;
     using Models.Enums;
     using Models.Suppliers;
     using System.Collections.Generic;
@@ -52,10 +53,58 @@
                 .OrderBy(s => s.Name)
                 .Select(s => new SupplierModel
                 {
+                    IsImporter = s.IsImporter,
                     Name = s.Name,
                     Id = s.Id
                 })
                 .ToList();
+        }
+
+        public void Create(string name, bool isImporter)
+        {
+            var supplier = new Supplier
+            {
+                Name = name,
+                IsImporter = isImporter
+            };
+
+            this.db.Add(supplier);
+            this.db.SaveChanges();
+        }
+
+        public void Edit(int id, string name, bool isImporter)
+        {
+            var supplier = this.db
+                .Suppliers
+                .FirstOrDefault(s => s.Id == id);
+
+            supplier.Name = name;
+            supplier.IsImporter = isImporter;
+
+            this.db.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            var supplier = this.db
+                .Suppliers
+                .FirstOrDefault(s => s.Id == id);
+
+            this.db.Remove(supplier);
+            this.db.SaveChanges();
+        }
+
+        public SupplierModel ById(int id)
+        {
+            return this.db
+                .Suppliers
+                .Where(s => s.Id == id)
+                .Select(s => new SupplierModel
+                {
+                    Name = s.Name,
+                    IsImporter = s.IsImporter
+                })
+                .FirstOrDefault();
         }
     }
 }
