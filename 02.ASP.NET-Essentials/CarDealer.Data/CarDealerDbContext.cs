@@ -1,5 +1,6 @@
 ﻿namespace CarDealer.Data
 {
+    using System.Data.SqlClient;
     using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore;
     using Models;
@@ -20,6 +21,8 @@
         public virtual DbSet<Part> Parts { get; set; }
 
         public virtual DbSet<Supplier> Suppliers { get; set; }
+
+        public virtual DbSet<Log> Logs { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -57,6 +60,12 @@
                 .HasOne(s => s.Customer)
                 .WithMany(c => c.Sales)
                 .HasForeignKey(s => s.CustomerId);
+
+            builder
+                .Entity<User>()
+                .HasMany(u => u.Logs)
+                .WithOne(l => l.User)
+                .HasForeignKey(u => u.UserId);
 
             base.OnModelCreating(builder);
         }

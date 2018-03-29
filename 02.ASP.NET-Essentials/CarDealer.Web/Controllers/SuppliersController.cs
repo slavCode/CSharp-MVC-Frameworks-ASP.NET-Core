@@ -1,6 +1,8 @@
 ﻿namespace CarDealer.Web.Controllers
 {
     using Data;
+    using Infrastructure.Extensions;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Models.Suppliers;
     using Services;
@@ -12,11 +14,16 @@
     public class SuppliersController : Controller
     {
         private readonly ISupplierService suppliers;
+        private readonly Logger logger;
 
-        public SuppliersController(CarDealerDbContext db)
+        private readonly string ControllerAsString = "suppliers";
+
+        public SuppliersController(ISupplierService suppliers, ILogService logs)
         {
-            this.suppliers = new SupplierService(db);
+            this.suppliers = suppliers;
+            this.logger = new Logger(logs);
         }
+
 
         [Route(nameof(All))]
         public IActionResult All()
@@ -41,12 +48,14 @@
             });
         }
 
+        [Authorize]
         [Route(nameof(Create))]
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         [Route(nameof(Create))]
         public IActionResult Create(SupplierModel supplierModel)
@@ -57,16 +66,19 @@
             }
 
             this.suppliers.Create(supplierModel.Name, supplierModel.IsImporter);
+            this.logger.Create(this.User, nameof(Create), ControllerAsString);
 
             return RedirectToAction(nameof(All));
         }
 
+        [Authorize]
         [Route(nameof(Edit) + "/{id}")]
         public IActionResult Edit(int id)
         {
             return View(this.suppliers.ById(id));
         }
 
+        [Authorize]
         [HttpPost]
         [Route(nameof(Edit) + "/{id}")]
         public IActionResult Edit(SupplierModel supplierModel)
@@ -77,14 +89,17 @@
             }
 
             this.suppliers.Edit(supplierModel.Id, supplierModel.Name, supplierModel.IsImporter);
+            this.logger.Create(this.User, nameof(Edit), ControllerAsString);
 
             return RedirectToAction(nameof(All));
         }
 
+        [Authorize]
         [Route(nameof(Delete) + "/{id}")]
         public IActionResult Delete(int id)
         {
             this.suppliers.Delete(id);
+            this.logger.Create(this.User, nameof(Delete), ControllerAsString);
 
             return RedirectToAction(nameof(All));
         }

@@ -1,12 +1,11 @@
 ﻿namespace CarDealer.Web.Controllers
 {
-    using Data;
+    using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Cars;
     using Services;
-    using Services.Implementaions;
     using System.Linq;
 
     [Route("cars")]
@@ -14,12 +13,19 @@
     {
         private readonly ICarService cars;
         private readonly IPartService parts;
+        private readonly Logger logger;
 
-        public CarsController(CarDealerDbContext db)
+        private const string ControllerAsString = "cars";
+
+
+        public CarsController(ICarService cars, IPartService parts, ILogService logs)
         {
-            this.cars = new CarService(db);
-            this.parts = new PartService(db);
+            this.cars = cars;
+            this.parts = parts;
+            this.logger = new Logger(logs);
         }
+
+        
 
         [Route("{make}")]
         public IActionResult ByMake(string make)
@@ -61,14 +67,15 @@
         [Route(nameof(Create))]
         public IActionResult Create(CarFormModel formModel)
         {
+
             if (!ModelState.IsValid)
             {
                 return View(formModel);
             }
 
             var partsIds = formModel.PartIds;
-
             this.cars.Create(formModel.Make, formModel.Model, formModel.TravelledDistance, partsIds);
+            this.logger.Create(this.User, nameof(Create), ControllerAsString);
 
             return RedirectToAction(nameof(All));
         }

@@ -40,7 +40,7 @@
             services.AddTransient<ISupplierService, SupplierService>();
             services.AddTransient<ISalesService, SalesService>();
             services.AddTransient<IPartService, PartService>();
-
+            services.AddTransient<ILogService, LogService>();
 
             services.AddMvc();
         }

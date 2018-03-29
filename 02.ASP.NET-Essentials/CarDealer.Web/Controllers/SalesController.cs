@@ -1,5 +1,7 @@
 ﻿namespace CarDealer.Web.Controllers
 {
+    using Infrastructure.Extensions;
+    using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Models.Sales;
@@ -7,7 +9,6 @@
     using Services.Models.Enums;
     using Services.Models.Sales;
     using System.Linq;
-    using Microsoft.AspNetCore.Authorization;
 
     [Route("sales")]
     public class SalesController : Controller
@@ -15,15 +16,20 @@
         private readonly ISalesService sales;
         private readonly ICarService cars;
         private readonly ICustomerService customers;
+        private readonly Logger logger;
 
-        public SalesController(ISalesService sales, ICarService cars, ICustomerService customers)
+        private readonly string ControllerAsString = "sales";
+
+
+        public SalesController(ISalesService sales, ICarService cars, ICustomerService customers, ILogService logs)
         {
             this.sales = sales;
             this.cars = cars;
             this.customers = customers;
+            this.logger = new Logger(logs);
         }
 
-        [Route("")]
+        [Route(nameof(All))]
         public IActionResult All()
         {
             var allSales = this.sales.All();
@@ -106,8 +112,6 @@
                 return RedirectToAction(nameof(Create));
             }
 
-            var sale = this.sales.SaleReview(formModel.CarId, formModel.CustomerId, formModel.Discount);
-
             return RedirectToAction(nameof(Review), formModel);
         }
 
@@ -118,7 +122,6 @@
             var sale = this.sales.SaleReview(formModel.CarId, formModel.CustomerId, formModel.Discount);
 
             return View(sale);
-
         }
 
         [Authorize]
@@ -127,6 +130,7 @@
         public IActionResult Review(SaleReviewModel saleReviewModel)
         {
             this.sales.Create(saleReviewModel.CarId, saleReviewModel.CustomerId, saleReviewModel.Discount);
+            this.logger.Create(this.User, nameof(Create), ControllerAsString);
 
             return RedirectToAction(nameof(All));
         }

@@ -59,6 +59,31 @@ namespace CarDealer.Data.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("CarDealer.Data.Models.Log", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("ModyfiedTable")
+                        .IsRequired()
+                        .HasMaxLength(9);
+
+                    b.Property<string>("Operation")
+                        .IsRequired()
+                        .HasMaxLength(6);
+
+                    b.Property<DateTime>("Timestamp");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Logs");
+                });
+
             modelBuilder.Entity("CarDealer.Data.Models.Part", b =>
                 {
                     b.Property<int>("Id")
@@ -288,6 +313,14 @@ namespace CarDealer.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("CarDealer.Data.Models.Log", b =>
+                {
+                    b.HasOne("CarDealer.Data.Models.User", "User")
+                        .WithMany("Logs")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("CarDealer.Data.Models.Part", b =>
