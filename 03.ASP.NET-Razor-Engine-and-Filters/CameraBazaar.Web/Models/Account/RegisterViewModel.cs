@@ -24,5 +24,9 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [RegularExpression(@"\+[0-9]{10,12}")]
+        public string Phone { get; set; }
     }
 }

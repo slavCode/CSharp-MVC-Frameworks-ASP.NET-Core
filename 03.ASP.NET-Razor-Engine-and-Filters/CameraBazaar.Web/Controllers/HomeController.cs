@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using CameraBazaar.Web.Models;
-
-namespace CameraBazaar.Web.Controllers
+﻿namespace CameraBazaar.Web.Controllers
 {
+    using System;
+    using System.ComponentModel;
+    using Models;
+    using Microsoft.AspNetCore.Mvc;
+    using System.Diagnostics;
+
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
+            throw new InvalidOperationException();
+
             return View();
         }
 

@@ -2,12 +2,16 @@
 {
     using Data;
     using Data.Models;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.AspNetCore.Identity;
+    using Microsoft.AspNetCore.Mvc;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Services;
+    using Services.Implementations;
 
     public class Startup
     {
@@ -33,7 +37,17 @@
                 .AddEntityFrameworkStores<CameraBazaarDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc();
+            services.AddTransient<ICameraService, CameraService>();
+            services.AddTransient<ISellerService, SellerService>();
+
+
+            services.AddMvc(options =>
+                {
+                    options.Filters.Add<ValidateAntiForgeryTokenAttribute>();
+                    options.Filters.Add<LogAttribute>();
+                }
+            );
+
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
