@@ -15,6 +15,7 @@
         [RegularExpression(@"([A-Z0-9][-]*)+")]
         public string Model { get; set; }
 
+        [MinLength(ValidationConstatnts.MinPriceValue)]
         public decimal Price { get; set; }
 
         [Range(ValidationConstatnts.QuantityMinLength,

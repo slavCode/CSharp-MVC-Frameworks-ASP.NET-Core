@@ -13,7 +13,7 @@
                 <a asp-area="" asp-controller="Cameras" asp-action="Add" title="Manage">Add Camera</a>
             </li>
             <li>
-                <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+                <a asp-area="" asp-controller="Users" asp-action="Details" asp-route-id="@UserManager.GetUserId(User)" title="Manage">Hello @UserManager.GetUserName(User)!</a>
             </li>
             <li>
                 <button type="submit" class="btn btn-link navbar-btn navbar-link">Log out</button>

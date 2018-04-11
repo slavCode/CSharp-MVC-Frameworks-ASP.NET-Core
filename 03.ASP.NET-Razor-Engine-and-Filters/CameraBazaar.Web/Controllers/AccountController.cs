@@ -1,6 +1,7 @@
 ﻿namespace CameraBazaar.Web.Controllers
 {
     using Data.Models;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Authentication;
     using Microsoft.AspNetCore.Authorization;
     using Microsoft.AspNetCore.Identity;
@@ -10,6 +11,7 @@
     using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
+    using Services;
 
     [Authorize]
     [Route("[controller]/[action]")]
@@ -18,15 +20,18 @@
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
         private readonly ILogger _logger;
+        private readonly IUserService users;
 
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger,
+            IUserService users)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            this.users = users;
         }
 
         [TempData]
@@ -46,6 +51,7 @@
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [LoginLog]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -56,6 +62,10 @@
                 var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    // Last login log
+                   
+                    this.users.AddLoginTime(model.Username);
+
                     _logger.LogInformation("User logged in.");
                     return RedirectToLocal(returnUrl);
                 }
@@ -437,7 +447,7 @@
             }
         }
 
-        private IActionResult RedirectToLocal(string returnUrl)
+        public IActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
             {

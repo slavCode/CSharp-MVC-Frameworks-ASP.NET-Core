@@ -55,7 +55,8 @@ namespace CameraBazaar.Data.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<string>("VideoResulution");
+                    b.Property<string>("VideoResulution")
+                        .HasMaxLength(15);
 
                     b.HasKey("Id");
 
@@ -78,6 +79,8 @@ namespace CameraBazaar.Data.Migrations
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
+
+                    b.Property<DateTime?>("LastLoginTime");
 
                     b.Property<bool>("LockoutEnabled");
 

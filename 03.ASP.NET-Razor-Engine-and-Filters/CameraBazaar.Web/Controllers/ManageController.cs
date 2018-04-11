@@ -6,12 +6,12 @@
     using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Logging;
+    using Models.Manage;
     using System;
     using System.Linq;
     using System.Text;
     using System.Text.Encodings.Web;
     using System.Threading.Tasks;
-    using Models.Manage;
 
     [Authorize]
     [Route("[controller]/[action]")]
@@ -51,7 +51,7 @@
             var model = new IndexViewModel
             {
                 Email = user.Email,
-                PhoneNumber = user.PhoneNumber,
+                PhoneNumber = user.PhoneNumber
             };
 
             return View(model);

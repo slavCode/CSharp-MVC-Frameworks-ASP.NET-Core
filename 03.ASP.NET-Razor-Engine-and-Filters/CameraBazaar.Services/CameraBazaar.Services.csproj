@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="ISellerService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\CameraBazaar.Data\CameraBazaar.Data.csproj" />
   </ItemGroup>
 

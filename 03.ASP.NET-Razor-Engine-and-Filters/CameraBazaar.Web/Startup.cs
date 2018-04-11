@@ -38,7 +38,7 @@
                 .AddDefaultTokenProviders();
 
             services.AddTransient<ICameraService, CameraService>();
-            services.AddTransient<ISellerService, SellerService>();
+            services.AddTransient<IUserService, UserService>();
 
 
             services.AddMvc(options =>

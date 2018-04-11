@@ -1,16 +1,13 @@
 ﻿namespace CameraBazaar.Web.Controllers
 {
-    using System;
-    using System.ComponentModel;
-    using Models;
     using Microsoft.AspNetCore.Mvc;
+    using Models;
     using System.Diagnostics;
 
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
-            throw new InvalidOperationException();
 
             return View();
         }
