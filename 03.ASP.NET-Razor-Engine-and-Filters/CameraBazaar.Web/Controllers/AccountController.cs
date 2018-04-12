@@ -51,7 +51,6 @@
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        [LoginLog]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
@@ -63,7 +62,6 @@
                 if (result.Succeeded)
                 {
                     // Last login log
-                   
                     this.users.AddLoginTime(model.Username);
 
                     _logger.LogInformation("User logged in.");

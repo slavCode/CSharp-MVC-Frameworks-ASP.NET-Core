@@ -1,5 +1,6 @@
 ﻿namespace CameraBazaar.Web
 {
+    using AutoMapper;
     using Data;
     using Data.Models;
     using Infrastructure.Filters;
@@ -40,11 +41,13 @@
             services.AddTransient<ICameraService, CameraService>();
             services.AddTransient<IUserService, UserService>();
 
+            services.AddAutoMapper();
 
             services.AddMvc(options =>
                 {
                     options.Filters.Add<ValidateAntiForgeryTokenAttribute>();
                     options.Filters.Add<LogAttribute>();
+                    options.Filters.Add<TimerAttribute>();
                 }
             );
 

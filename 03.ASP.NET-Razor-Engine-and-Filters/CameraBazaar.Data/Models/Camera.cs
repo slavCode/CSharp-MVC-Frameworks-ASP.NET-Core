@@ -1,5 +1,6 @@
 ﻿namespace CameraBazaar.Data.Models
 {
+    using System;
     using Common;
     using Enums;
     using System.ComponentModel.DataAnnotations;
@@ -15,39 +16,39 @@
         [RegularExpression(@"([A-Z0-9][-]*)+")]
         public string Model { get; set; }
 
-        [MinLength(ValidationConstatnts.MinPriceValue)]
+        [Range(0.0, Double.MaxValue)]
         public decimal Price { get; set; }
 
-        [Range(ValidationConstatnts.QuantityMinLength,
-            ValidationConstatnts.QuantityMaxLength)]
+        [Range(ValidationConstants.QuantityMinLength,
+            ValidationConstants.QuantityMaxLength)]
         public int Quantity { get; set; }
 
-        [Range(ValidationConstatnts.MinShutterSpeedMinLength,
-            ValidationConstatnts.MinShutterSpeedMaxLength)]
+        [Range(ValidationConstants.MinShutterSpeedMinLength,
+            ValidationConstants.MinShutterSpeedMaxLength)]
         public int MinShutterSpeed { get; set; }
 
-        [Range(ValidationConstatnts.MaxShutterSpeedMinLength,
-            ValidationConstatnts.MaxShutterSpeedMaxLength)]
+        [Range(ValidationConstants.MaxShutterSpeedMinLength,
+            ValidationConstants.MaxShutterSpeedMaxLength)]
         public int MaxShutterSpeed { get; set; }
 
         public MinISO MinIso { get; set; }
 
-        [Range(ValidationConstatnts.MaxIsoMinLength,
-            ValidationConstatnts.MaxIsoMaxLength)]
+        [Range(ValidationConstants.MaxIsoMinLength,
+            ValidationConstants.MaxIsoMaxLength)]
         public int MaxIso { get; set; }
 
         public bool IsFullFrame { get; set; }
 
-        [MinLength(ValidationConstatnts.VideoResulutionMinLength)]
-        [MaxLength(ValidationConstatnts.VideoResulutionMaxLength)]
+        [MinLength(ValidationConstants.VideoResulutionMinLength)]
+        [MaxLength(ValidationConstants.VideoResulutionMaxLength)]
         public string VideoResulution { get; set; }
 
-        public LightMetering LightMetering { get; set; }
+        public LightMetering? LightMetering { get; set; }
 
-        [MaxLength(ValidationConstatnts.DescriptionMaxLength)]
+        [MaxLength(ValidationConstants.DescriptionMaxLength)]
         public string Description { get; set; }
 
-        [MaxLength(ValidationConstatnts.ImageUrlMaxLength)]
+        [MaxLength(ValidationConstants.ImageUrlMaxLength)]
         [RegularExpression(@"^(http[s]*:\/\/).+")]
         public string ImageUrl { get; set; }
 
