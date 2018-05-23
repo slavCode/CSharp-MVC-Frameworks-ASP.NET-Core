@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Models\Users\UserInCourseListingModel.cs" />
+    <Compile Remove="Trainer\Implementaions\TrainerCourseService - Copy.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlSanitizer" Version="4.0.185" />
+    <PackageReference Include="OpenHtmlToPdf" Version="1.12.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\LearningSystem.Core\LearningSystem.Core.csproj" />
+    <ProjectReference Include="..\LearningSystem.Data\LearningSystem.Data.csproj" />
+  </ItemGroup>
+
+</Project>

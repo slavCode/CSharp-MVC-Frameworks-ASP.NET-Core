@@ -1,0 +1,49 @@
+﻿@model HomeIndexViewModel
+@{
+    ViewData["Title"] = "Courses";
+
+    var previousDisabled = this.Model.CurrentPage == 1 ? "disabled" : String.Empty;
+    var nextDisabled = this.Model.CurrentPage == this.Model.TotalPages ? "disabled" : String.Empty;
+}
+<div class="row">
+    <form asp-action="Search">
+        <div class="col-md-6">
+            <input asp-for="Term" class="form-control" placeholder="Search..." />
+        </div>
+        <div class="css-checkbox col-md-2">
+            <input asp-for="InCourses" />
+            <label asp-for="InCourses"></label>
+        </div>
+        <div class="css-checkbox col-md-2">
+            <input asp-for="InUsers" />
+            <label asp-for="InUsers"></label>
+        </div>
+        <div class="col-md-2 pull-right">
+            <input type="submit" class="form-control btn-sm btn-primary" value="Search" />
+        </div>
+    </form>
+</div>
+<div class="jumbotron home-jumbotron">
+    <h1 class="text-center">
+        <span class="rainbow"> Welcome to our learning system!</span>
+    </h1>
+</div>
+<div class="text-center">
+    <h2>@ViewData["Title"]</h2>
+    <br />
+    <div class="row home-page" id="course">
+        @Html.Partial("_CoursesPartial", Model.Courses)
+    </div>
+    <ul class="pagination">
+        <li class="page-item @previousDisabled">
+            <a asp-controller="Home"
+               asp-action="Index"
+               asp-route-page="@Model.PreviousPage">Newer</a>
+        </li>
+        <li class="page-item @nextDisabled">
+            <a asp-controller="Home"
+               asp-action="Index"
+               asp-route-page="@Model.NextPage">Older</a>
+        </li>
+    </ul>
+</div>

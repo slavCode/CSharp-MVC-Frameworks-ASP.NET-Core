@@ -1,0 +1,81 @@
+﻿@model UserProfileServiceModel
+@{
+    ViewData["Title"] = $"{Model.Username}";
+}
+
+<div class=" table text-center table-bordered ">
+    <div>
+        <h2>@ViewData["Title"]</h2>
+        <h4>@Model.Email</h4>
+        <br />
+    </div>
+</div>
+<br />
+
+<h4 class="text-center"><strong>My courses</strong></h4>
+@if (!Model.Courses.Any())
+{
+    <span><em>The student is not enrolled in any course.</em></span>
+}
+else
+{
+    <div class="row ">
+        <div class="col-md-12 ">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="col-md-6 ">Name</th>
+                        <th>Grade</th>
+                        <th>Certificate</th>
+                        <th class="2">Exam</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var course in Model.Courses)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-controller="Courses"
+                                   asp-action="Details"
+                                   asp-route-id="@course.Id"
+                                   asp-route-returnurl="@Context.Request.Path">@course.Name</a>
+                            </td>
+                            <td>@(course.Grade == null ? "No Grade" : course.Grade.ToString())</td>
+                            <td>
+                                @if (course.Grade.ToString().ToLower() == "a"
+|| course.Grade.ToString().ToLower() == "b"
+|| course.Grade.ToString().ToLower() == "c")
+                                {
+                                    <a asp-controller="Users"
+                                       asp-action="Certificate"
+                                       asp-route-courseId="@course.Id">Download</a>
+                                }
+                                else
+                                {
+                                    <small>
+                                        You do not have a certificate.
+                                    </small>
+                                }
+                            </td>
+                            <td>
+                                @if (@course.EndDate < DateTime.UtcNow)
+                                {
+                                    <small>
+                                        The period has expired.
+                                    </small>
+                                }
+                                else
+                                {
+                                    <small>
+                                        @Html.Raw($"{(@course.EndDate - DateTime.UtcNow).Days} more days left.")
+                                    </small>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+

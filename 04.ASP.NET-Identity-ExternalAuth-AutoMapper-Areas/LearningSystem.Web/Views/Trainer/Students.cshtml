@@ -1,0 +1,123 @@
+﻿@model TrainerCourseWithStudentsViewModel
+@{
+    ViewData["Title"] = $"{Model.Course.Name}";
+    var previousDisabled = this.Model.CurrentPage == 1
+            ? "disabled"
+            : String.Empty;
+    var nextDisabled = this.Model.CurrentPage == this.Model.TotalPages
+            ? "disabled"
+            : String.Empty;
+}
+
+<div class="text-center table-bordered">
+    <h2>@ViewData["Title"]</h2>
+    <h4>@Model.Course.StartDate.ToShortDateString() - @Model.Course.EndDate.ToShortDateString()</h4>
+    <br />
+</div>
+@if (!Model.Students.Any())
+{
+    <div class="text-center">
+        <span>Тhere are no students enrolled in the course yet.</span>
+    </div>
+}
+else
+{
+    <br />
+    <h4 class="text-center"><strong>Students</strong></h4>
+    <div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <th class="col-md-7">Name</th>
+                            <th>Exam</th>
+                            <th class="col-md-3" colspan="2">Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var student in @Model.Students)
+                        {
+                            <tr>
+                                <td>@student.Name</td>
+
+                                @if (Model.Course.EndDate < DateTime.UtcNow)
+                                {
+                                    <td>
+                                        <a asp-controller="Trainer"
+                                           asp-action="DownloadExam"
+                                           asp-route-courseId="@Model.Course.Id"
+                                           asp-route-studentId="@student.Id">
+                                            Download
+                                        </a>
+                                    </td>
+                                    <td>
+                                        @(student.Grade == null
+                                          ? "No Grade"
+                                          : student.Grade.ToString())
+                                    </td>
+                                    <td>
+                                        <form asp-action="GradeStudent"
+                                              asp-route-studentId="@student.Id"
+                                              asp-route-courseId="@Model.Course.Id"
+                                              asp-route-studentName="@student.Name">
+                                            <select name="grade"
+                                                    asp-items="@(Html.GetEnumSelectList<Grade>())"></select>
+                                            <input type="submit"
+                                                   class="btn btn-primary btn-sm pull-right"
+                                                   value="Grade Student" />
+                                        </form>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <small>
+                                            @Html.Raw($"{(Model.Course.EndDate - DateTime.UtcNow).Days} more days left.")
+                                        </small>
+                                    </td>
+
+                                    <td>
+                                        @(student.Grade == null
+                                          ? "No Grade"
+                                          : student.Grade.ToString())
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="pagination-center">
+                    <ul class="pagination">
+                        <li class="page-item @previousDisabled">
+                            <a asp-controller="Trainer"
+                               asp-action="Students"
+                               asp-route-courseId="@Model.Course.Id"
+                               asp-route-page="@Model.PreviousPage">
+                                Previous
+                            </a>
+                        </li>
+                        @for (int i = 1; i <= Model.TotalPages; i++)
+                        {
+
+                            var currentActive = Model.CurrentPage == i ? "active" : String.Empty;
+
+                            <li class="page-item @currentActive">
+                                <a asp-controller="Trainer"
+                                   asp-action="Students"
+                                   asp-route-courseId="@Model.Course.Id"
+                                   asp-route-page="@i">@i</a>
+                            </li>
+                        }
+                        <li class="page-item @nextDisabled">
+                            <a asp-controller="Trainer"
+                               asp-action="Students"
+                               asp-route-courseId="@Model.Course.Id"
+                               asp-route-page="@Model.NextPage">Next</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+}

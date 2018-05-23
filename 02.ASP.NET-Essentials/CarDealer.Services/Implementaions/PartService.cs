@@ -79,6 +79,9 @@
 
         public PartListingModel ById(int id)
         {
+            var test = this.db.Find<PartCars>(1, 20);
+
+
             return this.db
                 .Parts
                 .Where(p => p.Id == id)

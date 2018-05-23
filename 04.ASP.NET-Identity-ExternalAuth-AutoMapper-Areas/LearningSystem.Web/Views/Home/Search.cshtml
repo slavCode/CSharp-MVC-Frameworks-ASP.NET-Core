@@ -1,0 +1,151 @@
+﻿@model SearchViewModel
+@{
+    ViewData["Title"] = $@"Search results for  ""{Model.Term}""";
+
+    var coursesCurrentPage = @Model.CoursesInfo == null
+        ? String.Empty
+        : $"{Model.CoursesInfo.CurrentPage}";
+
+    var usersCurrentPage = @Model.UsersInfo == null
+        ? String.Empty
+        : $"{Model.UsersInfo.CurrentPage}";
+}
+
+<h2>@ViewData["Title"]</h2>
+<br />
+@if (@Model.CoursesInfo != null)
+{
+    coursesCurrentPage = $"{Model.CoursesInfo.CurrentPage}";
+
+    if (@Model.IsAnyCourses)
+    {
+        var coursesPrevDisabled = this.Model.CoursesInfo.CurrentPage == 1
+        ? "disabled"
+        : String.Empty;
+        var coursesNextDisabled = this.Model.CoursesInfo.CurrentPage == this.Model.CoursesInfo.TotalPages
+            ? "disabled"
+            : String.Empty;
+        <h4>Courses(@Model.CoursesInfo.TotalCourses)</h4>
+        <div class="row home-page">
+            @Html.Partial("_CoursesPartial", Model.CoursesInfo.Courses)
+        </div>
+        <ul class="pagination">
+            <li class="page-item @coursesPrevDisabled">
+                <a asp-route-term="@Model.Term"
+                   asp-route-inUsers="@Model.IsAnyUsers"
+                   asp-route-inCourses="@Model.IsAnyCourses"
+                   asp-route-usersPage="@usersCurrentPage"
+                   asp-route-coursesPage="@Model.CoursesInfo.PreviousPage">
+                    Previous
+                </a>
+            </li>
+            @for (int i = 1; i <= Model.CoursesInfo.TotalPages; i++)
+            {
+
+                var currentActive = Model.CoursesInfo.CurrentPage == i ? "active" : String.Empty;
+
+                <li class="page-item @currentActive">
+                    <a asp-route-term="@Model.Term"
+                       asp-route-inUsers="@Model.IsAnyUsers"
+                       asp-route-inCourses="@Model.IsAnyCourses"
+                       asp-route-usersPage="@usersCurrentPage"
+                       asp-route-coursesPage="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @coursesNextDisabled">
+                <a asp-route-term="@Model.Term"
+                   asp-route-inUsers="@Model.IsAnyUsers"
+                   asp-route-inCourses="@Model.IsAnyCourses"
+                   asp-route-usersPage="@usersCurrentPage"
+                   asp-route-coursesPage="@Model.CoursesInfo.NextPage"
+                   as>Next</a>
+            </li>
+        </ul>
+    }
+    else
+    {
+        <h4>No courses found :\</h4>
+    }
+}
+@if (@Model.UsersInfo != null)
+{
+    if (@Model.IsAnyUsers)
+    {
+        var usersPrevDisabled = this.Model.UsersInfo.CurrentPage == 1
+            ? "disabled"
+            : String.Empty;
+        var usersNextDisabled = this.Model.UsersInfo.CurrentPage == this.Model.UsersInfo.TotalPages
+            ? "disabled"
+            : String.Empty;
+        <h4>Users(@Model.UsersInfo.TotalUsers)</h4>
+        <div class="container-fluid">
+            <div class="row ">
+                <div>
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th class="col-md-7">Username</th>
+                                <th class="col-md-5" colspan="2">Email</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var user in @Model.UsersInfo.Users)
+                            {
+                                <tr>
+                                    <td>
+                                        @user.Username
+                                    </td>
+                                    <td>
+                                        @user.Email
+                                    </td>
+                                    <td class="col-md-1">
+                                        <form asp-controller="Users"
+                                              asp-action="Profile"
+                                              asp-route-username="@user.Username">
+                                            <input type="submit"
+                                                   class="btn-sm btn-group" value="Details" />
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <ul class="pagination">
+            <li class="page-item @usersPrevDisabled">
+                <a asp-route-term="@Model.Term"
+                   asp-route-inUsers="@Model.IsAnyUsers"
+                   asp-route-inCourses="@Model.IsAnyCourses"
+                   asp-route-coursesPage="@coursesCurrentPage"
+                   asp-route-usersPage="@Model.UsersInfo.PreviousPage">Previous</a>
+            </li>
+            @for (int i = 1; i <= Model.UsersInfo.TotalPages; i++)
+            {
+
+                var currentActive = Model.UsersInfo.CurrentPage == i ? "active" : String.Empty;
+
+                <li class="page-item @currentActive">
+                    <a asp-route-term="@Model.Term"
+                       asp-route-inUsers="@Model.IsAnyUsers"
+                       asp-route-inCourses="@Model.IsAnyCourses"
+                       asp-route-coursesPage="@coursesCurrentPage"
+                       asp-route-usersPage="@i">@i</a>
+                </li>
+            }
+            <li class="page-item @usersNextDisabled">
+                <a asp-route-term="@Model.Term"
+                   asp-route-inUsers="@Model.IsAnyUsers"
+                   asp-route-inCourses="@Model.IsAnyCourses"
+                   asp-route-coursesPage="@coursesCurrentPage"
+                   asp-route-usersPage="@Model.UsersInfo.NextPage">Next</a>
+            </li>
+        </ul>
+    }
+    else
+    {
+        <h4>No users found :\</h4>
+    }
+}
+

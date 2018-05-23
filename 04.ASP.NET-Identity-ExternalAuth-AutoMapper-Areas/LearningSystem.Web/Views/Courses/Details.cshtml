@@ -1,0 +1,91 @@
+﻿@model CourseDetailsViewModel
+@{
+    ViewData["Title"] = $"{Model.Course.Name}";
+    var studentOrStudentsText = Model.Course.Students == 1 ? "student" : "students";
+}
+
+<div class="text-center table-bordered course-details">
+    <h2><strong>@ViewData["Title"]</strong></h2>
+    <h4>@Model.Course.StartDate.ToShortDateString() - @Model.Course.EndDate.ToShortDateString()</h4>
+    <h4>Trainer: <em>@Model.Course.Trainer</em></h4>
+    <span class="text-blue">@Model.Course.Students @studentOrStudentsText in the course.</span>
+    <br />
+    <h4>@Model.Course.Description</h4>
+
+    @if (!User.Identity.IsAuthenticated)
+    {
+        <span>
+            <a asp-controller="Account"
+               asp-action="Login"
+               asp-route-returnurl="@Context.Request.Path">Sign In</a>
+            or
+            <a asp-controller="Account"
+               asp-action="Register"
+               asp-route-returnurl="@Context.Request.Path">Register</a> to enroll now!
+        </span>
+    }
+    else
+    {
+        if (!Model.IsStudentInCourse)
+        {
+            if (!Model.Course.IsActive)
+            {
+                <span>The term has expired :(</span>
+                <span>
+                    You can enroll in another upcoming course
+                    <a asp-controller="Home" asp-action="Index">
+                        here
+                    </a>
+                    .
+                </span>
+            }
+            else
+            {
+                <a asp-controller="Courses"
+                   asp-action="SignIn"
+                   asp-route-courseId="@Model.Course.Id"
+                   class="btn btn-primary">Sign Up</a>
+            }
+        }
+        else
+        {
+            var exam =
+                Model.Course.EndDate.ToShortDateString() == DateTime.UtcNow.AddDays(1).ToShortDateString();
+
+            <a asp-controller="Courses"
+               asp-action="SignOut"
+               asp-route-courseId="@Model.Course.Id"
+               class="btn btn-danger">Sign Out</a>
+            <br />
+            <h4>Exam</h4>
+            if (exam)
+            {
+                <form method="post"
+                      enctype="multipart/form-data"
+                      asp-controller="Courses"
+                      asp-action="Submission"
+                      asp-route-courseId="@Model.Course.Id">
+                    <input type="file" name="exam" value="Browse" class="center-block" accept=".zip" />
+                    <br />
+                    <input type="submit" class="btn btn-sm btn-success" value="Upload" />
+                    <br />
+                    <small>
+                        *The file must be in <strong>.zip</strong> format and less then the <strong>2MB</strong>.
+                    </small>
+                </form>
+                <br />
+            }
+            else
+            {
+                <small>
+                    @Html.Raw($"{(Model.Course.EndDate - DateTime.UtcNow).Days} more days left.")
+                </small>
+            }
+        }
+    }
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+

@@ -1,0 +1,37 @@
+﻿@model IEnumerable<TrainerCourseListingServiceModel>
+@{
+    ViewData["Title"] = "Courses";
+}
+
+<div class="text-center">
+    <h3><strong>@ViewData["Title"]</strong></h3>
+</div>
+<br/>
+<div class="table">
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th colspan="2">End Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var course in @Model)
+        {
+            <tr>
+                <td>@course.Name</td>
+                <td class="col-md-2">@course.StartDate.ToShortDateString()</td>
+                <td class="col-md-2">@course.EndDate.ToShortDateString()</td>
+                <td class="col-md-1">
+                    <a asp-controller="Trainer"
+                       asp-action="Students"
+                       asp-route-courseId="@course.Id"
+                       class="btn btn-primary btn-sm">Students</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+
