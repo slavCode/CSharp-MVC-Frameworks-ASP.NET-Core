@@ -1,0 +1,20 @@
+﻿@model CameraDetailsModel
+@{
+    ViewData["Title"] = "Details";
+}
+@{
+    var inStockColor = Model.Quantity > 1 ? "green" : "red";
+    var inStock = Model.Quantity > 1 ? "IN STOCK" : "OUT OF STOCK";
+}
+
+<h2>@Model.Make @Model.Model - $@Model.Price - <a style="color: @inStockColor">@inStock</a></h2>
+<h3>
+    <a href="/users/details/@Model.UserId">@Model.Username</a>
+</h3>
+<img src="@Model.ImageUrl" width="300"/>
+<br />
+
+<div class="table table-hover">
+   @Html.Partial("_CameraCharacteristics", @Model)
+</div>
+

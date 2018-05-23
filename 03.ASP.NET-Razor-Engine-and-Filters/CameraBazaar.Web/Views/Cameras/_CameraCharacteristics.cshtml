@@ -1,0 +1,39 @@
+﻿@model CameraDetailsModel
+@{
+    ViewData["Title"] = "_CameraCharacteristics";
+}
+<table>
+    <tr>
+        <th>Is Full Frame: </th>
+        <td>@(Model.IsFullFrame ? "Yes" : "No")</td>
+    </tr>
+    <tr>
+        <th>Min Shutter Speed: </th>
+        <td>@Model.MinShutterSpeed</td>
+    </tr>
+    <tr>
+        <th>Max Shutter Speed: </th>
+        <td>@Model.MaxShutterSpeed</td>
+    </tr>
+    <tr>
+        <th>Min ISO: </th>
+        <td>@Model.MinIso</td>
+    </tr>
+    <tr>
+        <th>Max ISO: </th>
+        <td>@Model.MaxIso</td>
+    </tr>
+    <tr>
+        <th>Video Resolution: </th>
+        <td>@Model.VideoResulution</td>
+    </tr>
+    <tr>
+        <th>Light Metering: </th>
+        <td>@Model.LightMetering</td>
+    </tr>
+    <tr>
+        <th>Description: </th>
+        <td>@Model.Description</td>
+    </tr>
+</table>
+

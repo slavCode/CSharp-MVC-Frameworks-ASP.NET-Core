@@ -1,0 +1,17 @@
+﻿@model DateTime?
+@{
+    ViewData["Title"] = "_LastLoginTime";
+}
+
+@if (Model == null)
+{
+    <div>First log in.</div>
+}
+else
+{
+    <div>
+        Last login: @Model.Value.ToLocalTime()
+    </div>
+}
+
+

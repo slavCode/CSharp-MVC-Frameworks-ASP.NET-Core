@@ -1,0 +1,97 @@
+﻿@model UserDetailsViewModel
+@{
+    ViewData["Title"] = @Model.Username;
+    Layout = "~/Views/Manage/_ProfileLayout.cshtml";
+
+    var display = Model.IsLogedInUser ? "flex" : "none";
+}
+<h2>@ViewData["Title"]</h2>
+
+<div style="display: @display">
+    <a class="btn btn-primary btn-default" href="/users/edit/@Model.Id" role="button">Edit Profile</a>
+
+</div>
+<br />
+@Html.Partial("_LastLoginTime", Model.LastLoginTime)
+<br />
+<div class="table table-hover">
+    <table>
+        <tr>
+            <th>Email: </th>
+            <td>@Model.Email</td>
+        </tr>
+        <tr>
+            <th>Phone: </th>
+            <td>@Model.Phone</td>
+        </tr>
+        <tr>
+            <th>Cameras: </th>
+            <td>@Model.InStockCameras in stock / @Model.OutOfStockCameras out of stock</td>
+        </tr>
+        <tr>
+            <th>
+                <h3>
+                    Cameras:
+                </h3>
+            </th>
+        </tr>
+
+    </table>
+    @if (!Model.Cameras.Any())
+    {
+        <table>
+            <tr>
+                <td>
+                    This user is not selling any cameras. Go to <a href="/">home page</a>
+                    to find more offers of other users.
+                </td>
+            </tr>
+        </table>
+    }
+    else
+    {
+        @foreach (var camera in Model.Cameras)
+        {
+
+            var inStock = "OUT OF STOCK";
+            var inStockColor = "red";
+            if (@Model.InStockCameras > 0)
+            {
+                inStock = "IN STOCK";
+                inStockColor = "green";
+            }
+
+            <table height="130">
+
+                <tr>
+
+                    <td rowspan="3" class="col-md-4"><img src="@camera.Image" width="140" /></td>
+                </tr>
+
+
+                <tr>
+                    <th>@camera.Make</th>
+                    <th>@camera.Model</th>
+                    <td>$@camera.Price</td>
+                    <td>
+                        <div style="display: @display">
+                            <a class="btn btn-primary" href="/cameras/edit/@camera.Id">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <a href="/cameras/details/@camera.Id">Details</a>
+                    </td>
+                    <th style="color: @inStockColor">@inStock</th>
+                    <td>
+                        <div style="display: @display">
+                            <a class="btn btn-danger" href="/cameras/delete/@camera.Id">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <br />
+        }
+    }
+</div>

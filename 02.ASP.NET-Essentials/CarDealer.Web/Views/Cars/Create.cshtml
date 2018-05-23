@@ -1,0 +1,40 @@
+﻿@model CarFormModel
+@{
+    ViewData["Title"] = "Add Car";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<div class="row">
+    <div class="col-md-5">
+        <form method="post">
+            <div class="form-group">
+                <label asp-for="Make"></label>
+                <input asp-for="Make" class="form-control" />
+                <span asp-validation-for="Make" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Model"></label>
+                <input asp-for="Model" class="form-control" type="text" />
+                <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TravelledDistance"></label>
+                <input asp-for="TravelledDistance" class="form-control" type="number" />
+                <span asp-validation-for="TravelledDistance" class="text-danger"></span>
+            </div> 
+           
+            <div class="form-group">
+                <label asp-for="AllParts"></label>
+                <select asp-for="PartIds" asp-items="Model.AllParts" multiple class="form-control parts-select"></select>
+                <small>*Hold Ctrl to select multple parts</small>
+            </div>
+
+            <div>
+            <button type="submit" class="btn btn-success">Save Car</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+

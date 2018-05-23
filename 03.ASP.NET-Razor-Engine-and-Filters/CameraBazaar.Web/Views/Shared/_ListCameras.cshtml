@@ -1,0 +1,29 @@
+﻿@model IEnumerable<CameraListingModel> 
+
+
+<table class="table table-hover">
+    <tbody>
+    @foreach (var camera in Model)
+    { 
+          
+        var inStock = "OUT OF STOCK";
+        var inStockColor = "red";
+          
+
+        <tr>
+            <td><img src="@camera.Image" width="100" height="100" /></td>
+            <th>@camera.Make</th>
+            <th>@camera.Model</th>
+            <td>$@camera.Price</td>
+            <td><a href="/cameras/details/@camera.Id">Details</a></td>
+            @if (@camera.InStock)
+            {
+                inStock = "IN STOCK";
+                inStockColor = "green";
+            }
+            <th style="color: @inStockColor ">@inStock</th>
+        </tr>
+    }
+    </tbody>
+</table>
+

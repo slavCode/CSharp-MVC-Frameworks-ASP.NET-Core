@@ -1,0 +1,23 @@
+﻿@model IEnumerable<UserModel>
+@{
+    ViewData["Title"] = "All Users";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table table-bordered table-hover">
+    <tbody>
+    @foreach (var seller in Model)
+    {
+        <tr>
+            <td>
+
+                <a href="/users/details/@seller.Id">
+                    @seller.Username
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
