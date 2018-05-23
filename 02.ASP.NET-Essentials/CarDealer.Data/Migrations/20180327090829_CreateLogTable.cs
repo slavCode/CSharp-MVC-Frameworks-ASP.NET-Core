@@ -18,6 +18,7 @@
                     Timestamp = table.Column<DateTime>(nullable: false),
                     UserId = table.Column<string>(nullable: true)
                 },
+				
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Logs", x => x.Id);
