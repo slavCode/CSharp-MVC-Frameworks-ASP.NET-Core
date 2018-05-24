@@ -4,6 +4,7 @@
     using Data;
     using Microsoft.EntityFrameworkCore;
     using Models.Book;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -39,5 +40,44 @@
                 .Take(10)
                 .ProjectTo<BookWithTitleOnlyServiceModel>()
                 .ToListAsync();
+
+        public async Task<bool> Edit(
+            int id,
+            string title,
+            string description,
+            decimal price,
+            int copies,
+            int edition,
+            int? ageRestriction,
+            DateTime releaseDate,
+            int authorId)
+        {
+            var book = await this.db.Books.FirstOrDefaultAsync(b => b.Id == id);
+            if (book == null) return false;
+
+            book.Title = title;
+            book.Description = description;
+            book.Price = price;
+            book.Copies = copies;
+            book.Edition = edition;
+            book.AgeRestriction = ageRestriction;
+            book.ReleaseDate = releaseDate;
+            book.AuthorId = authorId;
+
+            await this.db.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> Delete(int id)
+        {
+            var book = await this.db.Books.FirstOrDefaultAsync(b => b.Id == id);
+            if (book == null) return false;
+
+            this.db.Books.Remove(book);
+            await this.db.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

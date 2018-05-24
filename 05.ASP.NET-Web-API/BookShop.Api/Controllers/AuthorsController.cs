@@ -3,9 +3,9 @@
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
-    using Models;
     using Service;
     using System.Threading.Tasks;
+    using Models.Author;
 
     using static WebConstants;
 

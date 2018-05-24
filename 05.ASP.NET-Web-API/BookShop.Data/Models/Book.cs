@@ -28,6 +28,11 @@
         [Range(0, Int32.MaxValue)]
         public int Edition { get; set; }
 
+        [Range(3, 21)]
+        public int? AgeRestriction { get; set; }
+
+        public DateTime ReleaseDate { get; set; }
+
         public int AuthorId { get; set; }
 
         public Author Author { get; set; }

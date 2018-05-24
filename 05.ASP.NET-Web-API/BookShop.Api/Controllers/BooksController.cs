@@ -2,6 +2,7 @@
 {
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Mvc;
+    using Models.Book;
     using Service;
     using System.Threading.Tasks;
 
@@ -25,7 +26,30 @@
         {
             var result = await this.books.FindAsync(search);
 
-           return this.OkOrNotFound(result);
+            return this.OkOrNotFound(result);
+        }
+
+        [HttpPut(WithId)]
+        public async Task<IActionResult> Put(int id, [FromBody]BookPutRequestModel model)
+        {
+            if (model == null) return BadRequest();
+
+            var success = await this.books.Edit(id, model.Title, model.Description, model.Price,
+                                              model.Copies, model.Edition, model.AgeRestriction,
+                                              model.ReleaseDate, model.AuthorId);
+
+            if (!success) return BadRequest();
+
+            return Ok();
+        }
+
+        [HttpDelete(WithId)]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var success = await this.books.Delete(id);
+            if (!success) return BadRequest();
+
+            return Ok();
         }
     }
 }

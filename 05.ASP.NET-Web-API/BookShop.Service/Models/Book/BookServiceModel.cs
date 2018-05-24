@@ -1,10 +1,10 @@
 ﻿namespace BookShop.Service.Models.Book
 {
-    using System.Collections.Generic;
-    using System.Linq;
     using AutoMapper;
     using Core.Mapping;
     using Data.Models;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class BookServiceModel : IMapFrom<Book>, IHaveCustomMapping
     {
