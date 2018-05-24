@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Data.Models;
 
     public class BookService : IBookService
     {
@@ -75,6 +76,44 @@
             if (book == null) return false;
 
             this.db.Books.Remove(book);
+            await this.db.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> Create(
+            int authorId, 
+            string title, 
+            string description, 
+            decimal price, 
+            int copies,
+            int edition, 
+            int? ageRestriction, 
+            DateTime releaseDate, 
+            IEnumerable<int> categoryIds)
+        {
+            var book = new Book
+            {
+                AuthorId = authorId,
+                Title = title,
+                Description = description,
+                Price = price,
+                Copies = copies,
+                Edition = edition,
+                AgeRestriction = ageRestriction,
+                ReleaseDate = releaseDate
+            };
+
+            var categoriesInBook = new List<CategoryBooks>();
+            foreach (var categoryId in categoryIds)
+            {
+                var categoryBooks = new CategoryBooks { BookId = book.Id, CategoryId = categoryId };
+                categoriesInBook.Add(categoryBooks);
+            }
+
+            book.Categories.AddRange(categoriesInBook);
+
+            this.db.Add(book);
             await this.db.SaveChangesAsync();
 
             return true;

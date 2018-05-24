@@ -10,5 +10,12 @@
 
             return controller.Ok(model);
         }
+
+        public static IActionResult OkOrBadRequest(this Controller controller, bool success)
+        {
+            if (!success) return controller.BadRequest();
+
+            return controller.Ok();
+        }
     }
 }

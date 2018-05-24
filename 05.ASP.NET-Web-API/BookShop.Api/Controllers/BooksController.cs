@@ -1,6 +1,7 @@
 ﻿namespace BookShop.Api.Controllers
 {
     using Infrastructure.Extensions;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Book;
     using Service;
@@ -11,10 +12,12 @@
     public class BooksController : BaseController
     {
         private readonly IBookService books;
+        private readonly ICategoryService categories;
 
-        public BooksController(IBookService books)
+        public BooksController(IBookService books, ICategoryService categories)
         {
             this.books = books;
+            this.categories = categories;
         }
 
         [HttpGet(WithId)]
@@ -23,11 +26,7 @@
 
         [HttpGet]
         public async Task<IActionResult> Search([FromQuery]string search = "")
-        {
-            var result = await this.books.FindAsync(search);
-
-            return this.OkOrNotFound(result);
-        }
+            => this.OkOrNotFound(await this.books.FindAsync(search));
 
         [HttpPut(WithId)]
         public async Task<IActionResult> Put(int id, [FromBody]BookPutRequestModel model)
@@ -38,18 +37,23 @@
                                               model.Copies, model.Edition, model.AgeRestriction,
                                               model.ReleaseDate, model.AuthorId);
 
-            if (!success) return BadRequest();
-
-            return Ok();
+            return this.OkOrBadRequest(success);
         }
 
         [HttpDelete(WithId)]
         public async Task<IActionResult> Delete(int id)
-        {
-            var success = await this.books.Delete(id);
-            if (!success) return BadRequest();
+            => this.OkOrBadRequest(await this.books.Delete(id));
 
-            return Ok();
+        [HttpPost]
+        [ValidateModelState]
+        public async Task<IActionResult> Post([FromBody] BookPostRequestModel model)
+        {
+            var categoryIds = await this.categories.CreateMultipleAsync(model.Categories);
+
+            var succeess = await this.books.Create(model.AuthorId, model.Title, model.Description,
+                                             model.Price, model.Copies,model.Edition, model.AgeRestriction,
+                                             model.ReleaseDate, categoryIds);
+            return this.OkOrBadRequest(succeess);
         }
     }
 }
