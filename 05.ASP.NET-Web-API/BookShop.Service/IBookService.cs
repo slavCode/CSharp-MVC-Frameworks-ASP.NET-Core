@@ -18,7 +18,7 @@
 
         Task<bool> Delete(int id);
 
-        Task<bool> Create(int authorId, string title, string description, decimal price, 
+        Task<bool> Create(int authorId, string title, string description, decimal price,
                           int copies, int edition, int? ageRestriction, DateTime releaseDate,
                           IEnumerable<int> categoryIds);
     }
