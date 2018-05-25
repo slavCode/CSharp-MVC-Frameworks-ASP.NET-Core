@@ -10,7 +10,9 @@
 
         Task<CategoryServiceModel> FindAsync(int id);
 
-        Task<bool> FindAsync(string name);
+        Task<bool> ExistsAsync(string name);
+
+        Task<bool> ExistsAsync(int id);
 
         Task<int?> CreateAsync(string name);
 

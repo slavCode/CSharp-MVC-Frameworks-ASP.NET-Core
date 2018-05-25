@@ -30,22 +30,27 @@
         [ValidateModelState]
         public async Task<IActionResult> Put(int id, [FromBody]CategoryRequestModel model)
         {
-            var exists = await this.categories.FindAsync(model.Name);
-            if (exists) return BadRequest(CategoryErrorMessage);
+            var exists = await this.categories.ExistsAsync(id);
+            if (!exists) return BadRequest();
 
             return this.OkOrNotFound(await this.categories.EditAsync(id, model.Name));
         }
 
         [HttpDelete(WithId)]
         public async Task<IActionResult> Delete(int id)
-            => this.OkOrBadRequest(await this.categories.DeleteAsync(id));
+        {
+            var exists = await this.categories.ExistsAsync(id);
+            if (!exists) return BadRequest();
+
+            return this.OkOrBadRequest(await this.categories.DeleteAsync(id));
+        }
 
         [HttpPost]
         [ValidateModelState]
         public async Task<IActionResult> Post([FromBody] CategoryRequestModel model)
         {
-            var exists = await this.categories.FindAsync(model.Name);
-            if (exists) return BadRequest(CategoryErrorMessage);
+            var exists = await this.categories.ExistsAsync(model.Name);
+            if (exists) return BadRequest($@"Category ""{model.Name}"" already exists.");
 
             return this.OkOrNotFound(await this.categories.CreateAsync(model.Name));
         }

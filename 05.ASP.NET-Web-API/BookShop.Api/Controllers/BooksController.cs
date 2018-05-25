@@ -5,6 +5,7 @@
     using Microsoft.AspNetCore.Mvc;
     using Models.Book;
     using Service;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using static WebConstants;
@@ -30,8 +31,15 @@
             => this.OkOrNotFound(await this.books.ByIdAsync(id));
 
         [HttpGet]
-        public async Task<IActionResult> Search([FromQuery]string search = "")
-            => this.OkOrNotFound(await this.books.FindAsync(search));
+        public async Task<IActionResult> Search([FromQuery] string search = "")
+        {
+            if (search == null) return BadRequest();
+
+            var resultBooks = await this.books.FindAsync(search);
+            if (!resultBooks.Any()) return NoContent();
+
+            return this.OkOrNotFound(await this.books.FindAsync(search));
+        }
 
         [HttpPut(WithId)]
         [ValidateModelState]
@@ -61,7 +69,7 @@
             var categoryIds = await this.categories.CreateMultipleAsync(model.Categories);
 
             var titleExists = await this.books.TitleExistsAsync(model.Title);
-            if (titleExists) return BadRequest($"Book with {model.Title} title already exists.");
+            if (titleExists) return BadRequest($@"Book with ""{model.Title}"" title already exists.");
 
             var bookId = await this.books.CreateAsync(
                 model.AuthorId,

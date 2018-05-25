@@ -33,16 +33,18 @@
                 .ProjectTo<CategoryServiceModel>()
                 .FirstOrDefaultAsync();
 
-        public async Task<bool> FindAsync(string name)
+        public async Task<bool> ExistsAsync(string name)
             => await this.db
                 .Categories
                 .AnyAsync(c => c.Name.ToLower() == name.ToLower());
 
+        public async Task<bool> ExistsAsync(int id)
+            => await this.db
+                .Categories
+                .AnyAsync(c => c.Id == id);
+
         public async Task<int?> CreateAsync(string name)
         {
-            var exists = await this.ExistsAsync(name);
-            if (exists) return null;
-
             var category = new Category { Name = name.Capitalize() };
 
             this.db.Add(category);
@@ -80,11 +82,8 @@
 
         public async Task<int?> EditAsync(int id, string name)
         {
-            var exists = await this.ExistsAsync(name);
-            if (exists) return null;
-
             var category = await this.FindByIdAsync(id);
-            category.Name = name;
+            category.Name = name.Capitalize();
 
             await this.db.SaveChangesAsync();
 
@@ -93,7 +92,7 @@
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var category = await this.FindAsync(id);
+            var category = await this.FindByIdAsync(id);
             if (category == null) return false;
 
             this.db.Remove(category);
@@ -101,11 +100,6 @@
 
             return true;
         }
-
-        private async Task<bool> ExistsAsync(string name)
-            => await this.db
-                   .Categories
-                   .FirstOrDefaultAsync(c => c.Name.ToLower() == name.ToLower()) != null;
 
         private async Task<Category> FindByIdAsync(int id)
             => await this.db.Categories.FirstOrDefaultAsync(c => c.Id == id);

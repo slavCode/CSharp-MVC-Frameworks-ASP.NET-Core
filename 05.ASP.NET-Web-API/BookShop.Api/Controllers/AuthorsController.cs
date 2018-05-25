@@ -1,11 +1,11 @@
 ﻿namespace BookShop.Api.Controllers
 {
-    using System.Linq;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
     using Models.Author;
     using Service;
+    using System.Linq;
     using System.Threading.Tasks;
 
     using static WebConstants;
@@ -30,6 +30,9 @@
         [HttpGet(WithId + WithBooks)]
         public async Task<IActionResult> GetBooks(int id)
         {
+            var authorExists = await this.authors.ExistsAsync(id);
+            if (!authorExists) return BadRequest("Author does not exists.");
+
             var result = await this.books.ByAuthorAsync(id);
             if (!result.Any()) return NoContent();
 
