@@ -34,12 +34,25 @@
 
         public async Task<bool> EditAsync(int id, string name)
         {
-            var exist = await this.db.Categories.AnyAsync(c => c.Name == name);
-            if (exist) return false;
+            var exists = await this.ExistsAsync(name);
+            if (exists) return false;
 
-            var category = await this.db.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            var category = await this.FindAsync(id);
             category.Name = name;
 
+            await this.db.SaveChangesAsync();
+
+            return true;
+        }
+
+        public async Task<bool> CreateAsync(string name)
+        {
+            var exists = await this.ExistsAsync(name);
+            if (exists) return false;
+
+            var category = new Category { Name = name };
+
+            this.db.Add(category);
             await this.db.SaveChangesAsync();
 
             return true;
@@ -70,7 +83,7 @@
 
         public async Task<bool> DeleteAsync(int id)
         {
-            var category = await this.db.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            var category = await this.FindAsync(id);
             if (category == null) return false;
 
             this.db.Remove(category);
@@ -78,5 +91,11 @@
 
             return true;
         }
+
+        public async Task<bool> ExistsAsync(string name)
+            => await this.db.Categories.FirstOrDefaultAsync(c => c.Name == name) != null;
+
+        public async Task<Category> FindAsync(int id)
+            => await this.db.Categories.FirstOrDefaultAsync(c => c.Id == id);
     }
 }

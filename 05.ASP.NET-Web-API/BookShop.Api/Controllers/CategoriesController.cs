@@ -28,12 +28,17 @@
 
         [HttpPut(WithId)]
         [ValidateModelState]
-        public async Task<IActionResult> Put(int id, [FromBody]CategoryPutRequestModel model)
+        public async Task<IActionResult> Put(int id, [FromBody]CategoryRequestModel model)
             => this.OkOrBadRequest(await this.categories.EditAsync(id, model.Name));
 
         [HttpDelete(WithId)]
         public async Task<IActionResult> Delete(int id)
             => this.OkOrBadRequest(await this.categories.DeleteAsync(id));
+
+        [HttpPost]
+        [ValidateModelState]
+        public async Task<IActionResult> Post([FromBody] CategoryRequestModel model)
+            => this.OkOrBadRequest(await this.categories.CreateAsync(model.Name));
 
     }
 }

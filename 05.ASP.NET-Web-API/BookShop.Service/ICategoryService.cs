@@ -12,6 +12,8 @@
 
         Task<bool> EditAsync(int id, string name);
 
+        Task<bool> CreateAsync(string name);
+
         Task<IEnumerable<int>> CreateMultipleAsync(string categoryNames);
 
         Task<bool> DeleteAsync(int id);
