@@ -20,6 +20,9 @@
             this.db = db;
         }
 
+       public async Task<bool> TitleExistsAsync(string title)
+            => await this.db.Books.AnyAsync(b => b.Title.ToLower() == title.ToLower());
+
         public async Task<BookWithAuthorServiceModel> ByIdAsync(int id)
             => await this.db
                 .Books
@@ -93,9 +96,6 @@
               DateTime releaseDate,
               IEnumerable<int> categoryIds)
         {
-            var titleExists = await this.TitleExistsAsync(title);
-            if (titleExists) return null;
-           
             var book = new Book
             {
                 AuthorId = authorId,
@@ -125,8 +125,5 @@
 
         private async Task<Book> FindAsync(int id)
             => await this.db.Books.FirstOrDefaultAsync(b => b.Id == id);
-
-        private async Task<bool> TitleExistsAsync(string title)
-            => await this.db.Books.AnyAsync(b => b.Title.ToLower() == title.ToLower());
     }
 }

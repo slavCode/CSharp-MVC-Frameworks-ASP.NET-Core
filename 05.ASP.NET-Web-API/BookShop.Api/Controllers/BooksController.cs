@@ -60,6 +60,9 @@
 
             var categoryIds = await this.categories.CreateMultipleAsync(model.Categories);
 
+            var titleExists = await this.books.TitleExistsAsync(model.Title);
+            if (titleExists) return BadRequest($"Book with {model.Title} title already exists.");
+
             var bookId = await this.books.CreateAsync(
                 model.AuthorId,
                 model.Title,

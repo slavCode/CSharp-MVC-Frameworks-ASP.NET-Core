@@ -7,6 +7,8 @@
 
     public interface IBookService
     {
+        Task<bool> TitleExistsAsync(string title);
+
         Task<BookWithAuthorServiceModel> ByIdAsync(int id);
 
         Task<IEnumerable<BookServiceModel>> ByAuthorAsync(int id);
