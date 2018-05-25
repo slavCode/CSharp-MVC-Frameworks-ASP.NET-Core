@@ -25,6 +25,13 @@
                          .ProjectTo<CategoryServiceModel>()
                          .ToListAsync();
 
+        public async Task<CategoryServiceModel> ByIdAsync(int id)
+            => await this.db
+                .Categories
+                .Where(c => c.Id == id)
+                .ProjectTo<CategoryServiceModel>()
+                .FirstOrDefaultAsync();
+
         public async Task<IEnumerable<int>> CreateMultipleAsync(string categoryNames)
         {
             if (string.IsNullOrEmpty(categoryNames)) return null;

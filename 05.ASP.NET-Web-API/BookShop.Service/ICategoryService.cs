@@ -8,6 +8,8 @@
     {
         Task<IEnumerable<CategoryServiceModel>> AllAsync();
 
+        Task<CategoryServiceModel> ByIdAsync(int id);
+
         Task<IEnumerable<int>> CreateMultipleAsync(string categoryNames);
     }
 }
