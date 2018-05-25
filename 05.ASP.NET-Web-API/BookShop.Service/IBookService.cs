@@ -7,19 +7,32 @@
 
     public interface IBookService
     {
-        Task<BookWithAuthorServiceModel> ById(int id);
+        Task<BookWithAuthorServiceModel> ByIdAsync(int id);
 
         Task<IEnumerable<BookServiceModel>> ByAuthorAsync(int id);
 
         Task<IEnumerable<BookWithTitleOnlyServiceModel>> FindAsync(string term);
 
-        Task<bool> Edit(int id, string title, string description, decimal price, int copies,
-                        int edition, int? ageRestriction, DateTime releaseDate, int authorId);
+        Task<int?> EditAsync(int id, 
+                             string title, 
+                             string description, 
+                             decimal price, 
+                             int copies,
+                             int edition, 
+                             int? ageRestriction, 
+                             DateTime releaseDate, 
+                             int authorId);
 
-        Task<bool> Delete(int id);
+        Task<bool> DeleteAsync(int id);
 
-        Task<bool> Create(int authorId, string title, string description, decimal price,
-                          int copies, int edition, int? ageRestriction, DateTime releaseDate,
-                          IEnumerable<int> categoryIds);
+        Task<int?> CreateAsync(int authorId, 
+                               string title, 
+                               string description, 
+                               decimal price,
+                               int copies, 
+                               int edition, 
+                               int? ageRestriction, 
+                               DateTime releaseDate,
+                               IEnumerable<int> categoryIds);
     }
 }

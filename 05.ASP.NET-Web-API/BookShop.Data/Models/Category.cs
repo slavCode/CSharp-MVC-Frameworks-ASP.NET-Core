@@ -15,6 +15,5 @@
         public string Name { get; set; }
 
         public List<CategoryBooks> Books { get; set; } = new List<CategoryBooks>();
-
     }
 }

@@ -2,13 +2,14 @@
 {
     using AutoMapper.QueryableExtensions;
     using Data;
+    using Data.Models;
+    using Infrastructure;
     using Microsoft.EntityFrameworkCore;
     using Models.Book;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Data.Models;
 
     public class BookService : IBookService
     {
@@ -19,7 +20,7 @@
             this.db = db;
         }
 
-        public async Task<BookWithAuthorServiceModel> ById(int id)
+        public async Task<BookWithAuthorServiceModel> ByIdAsync(int id)
             => await this.db
                 .Books
                 .Where(b => b.Id == id)
@@ -42,7 +43,7 @@
                 .ProjectTo<BookWithTitleOnlyServiceModel>()
                 .ToListAsync();
 
-        public async Task<bool> Edit(
+        public async Task<int?> EditAsync(
             int id,
             string title,
             string description,
@@ -53,11 +54,11 @@
             DateTime releaseDate,
             int authorId)
         {
-            var book = await this.db.Books.FirstOrDefaultAsync(b => b.Id == id);
-            if (book == null) return false;
+            var book = await FindAsync(id);
+            if (book == null) return null;
 
-            book.Title = title;
-            book.Description = description;
+            book.Title = title.Capitalize();
+            book.Description = description.Capitalize();
             book.Price = price;
             book.Copies = copies;
             book.Edition = edition;
@@ -67,12 +68,12 @@
 
             await this.db.SaveChangesAsync();
 
-            return true;
+            return book.Id;
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var book = await this.db.Books.FirstOrDefaultAsync(b => b.Id == id);
+            var book = await FindAsync(id);
             if (book == null) return false;
 
             this.db.Books.Remove(book);
@@ -81,22 +82,25 @@
             return true;
         }
 
-        public async Task<bool> Create(
-            int authorId, 
-            string title, 
-            string description, 
-            decimal price, 
-            int copies,
-            int edition, 
-            int? ageRestriction, 
-            DateTime releaseDate, 
-            IEnumerable<int> categoryIds)
+        public async Task<int?> CreateAsync(
+              int authorId,
+              string title,
+              string description,
+              decimal price,
+              int copies,
+              int edition,
+              int? ageRestriction,
+              DateTime releaseDate,
+              IEnumerable<int> categoryIds)
         {
+            var titleExists = await this.TitleExistsAsync(title);
+            if (titleExists) return null;
+           
             var book = new Book
             {
                 AuthorId = authorId,
-                Title = title,
-                Description = description,
+                Title = title.Capitalize(),
+                Description = description.Capitalize(),
                 Price = price,
                 Copies = copies,
                 Edition = edition,
@@ -116,7 +120,13 @@
             this.db.Add(book);
             await this.db.SaveChangesAsync();
 
-            return true;
+            return book.Id;
         }
+
+        private async Task<Book> FindAsync(int id)
+            => await this.db.Books.FirstOrDefaultAsync(b => b.Id == id);
+
+        private async Task<bool> TitleExistsAsync(string title)
+            => await this.db.Books.AnyAsync(b => b.Title.ToLower() == title.ToLower());
     }
 }

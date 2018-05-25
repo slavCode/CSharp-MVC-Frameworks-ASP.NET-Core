@@ -18,10 +18,10 @@
         [MinLength(DescriptionMinLength)]
         public string Description { get; set; }
 
-        [Range(0, Double.MaxValue)]
+        [Range(0.01, Double.MaxValue)]
         public decimal Price { get; set; }
 
-        [Range(0, Int32.MaxValue)]
+        [Range(1, Int32.MaxValue)]
         public int Copies { get; set; }
 
         [Range(0, Int32.MaxValue)]
@@ -30,6 +30,7 @@
         [Range(3, 21)]
         public int? AgeRestriction { get; set; }
 
+        [DataType(DataType.Date)]
         public DateTime ReleaseDate { get; set; }
     }
 }

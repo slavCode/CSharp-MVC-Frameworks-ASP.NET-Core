@@ -4,14 +4,15 @@
 
     public static class ControllerExtensions
     {
-        public static IActionResult OkOrNotFound(this Controller controller, object model)
+        public static IActionResult OkOrNotFound(this Controller controller, object model, string message = "")
         {
-            if (model == null) return controller.NotFound();
+            if (model == null) return controller.NotFound(message);
 
             return controller.Ok(model);
         }
 
-        public static IActionResult OkOrBadRequest(this Controller controller, bool success)
+        public static IActionResult OkOrBadRequest(
+            this Controller controller, bool success)
         {
             if (!success) return controller.BadRequest();
 

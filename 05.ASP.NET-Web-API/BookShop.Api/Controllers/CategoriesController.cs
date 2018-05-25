@@ -24,12 +24,17 @@
 
         [HttpGet(WithId)]
         public async Task<IActionResult> Get(int id)
-            => this.OkOrNotFound(await this.categories.ByIdAsync(id));
+            => this.OkOrNotFound(await this.categories.FindAsync(id));
 
         [HttpPut(WithId)]
         [ValidateModelState]
         public async Task<IActionResult> Put(int id, [FromBody]CategoryRequestModel model)
-            => this.OkOrBadRequest(await this.categories.EditAsync(id, model.Name));
+        {
+            var exists = await this.categories.FindAsync(model.Name);
+            if (exists) return BadRequest(CategoryErrorMessage);
+
+            return this.OkOrNotFound(await this.categories.EditAsync(id, model.Name));
+        }
 
         [HttpDelete(WithId)]
         public async Task<IActionResult> Delete(int id)
@@ -38,7 +43,12 @@
         [HttpPost]
         [ValidateModelState]
         public async Task<IActionResult> Post([FromBody] CategoryRequestModel model)
-            => this.OkOrBadRequest(await this.categories.CreateAsync(model.Name));
+        {
+            var exists = await this.categories.FindAsync(model.Name);
+            if (exists) return BadRequest(CategoryErrorMessage);
+
+            return this.OkOrNotFound(await this.categories.CreateAsync(model.Name));
+        }
 
     }
 }

@@ -1,11 +1,12 @@
 ﻿namespace BookShop.Api.Controllers
 {
+    using System.Linq;
     using Infrastructure.Extensions;
     using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
+    using Models.Author;
     using Service;
     using System.Threading.Tasks;
-    using Models.Author;
 
     using static WebConstants;
 
@@ -28,11 +29,21 @@
 
         [HttpGet(WithId + WithBooks)]
         public async Task<IActionResult> GetBooks(int id)
-            => this.OkOrNotFound(await this.books.ByAuthorAsync(id));
+        {
+            var result = await this.books.ByAuthorAsync(id);
+            if (!result.Any()) return NoContent();
+
+            return this.OkOrNotFound(result);
+        }
 
         [HttpPost]
         [ValidateModelState]
         public async Task<IActionResult> Post([FromBody]AuthorPostRequestModel model)
-            => Ok(await this.authors.CreateAsync(model.FirstName, model.LastName));
+        {
+            var exists = await this.authors.ExistsAsync(model.FirstName, model.LastName);
+            if (exists) return BadRequest("Author already exists.");
+
+            return this.OkOrNotFound(await this.authors.CreateAsync(model.FirstName, model.LastName));
+        }
     }
 }

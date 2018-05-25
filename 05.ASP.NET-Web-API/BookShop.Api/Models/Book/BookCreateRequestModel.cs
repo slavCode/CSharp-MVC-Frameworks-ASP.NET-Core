@@ -2,7 +2,7 @@
 {
     using System.ComponentModel.DataAnnotations;
 
-    public class BookPostRequestModel : BookPutRequestModel
+    public class BookCreateRequestModel : BookEditRequestModel
     {
         [Required]
         public string Categories { get; set; }

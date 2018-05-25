@@ -13,16 +13,21 @@
     {
         private readonly IBookService books;
         private readonly ICategoryService categories;
+        private readonly IAuthorService authors;
 
-        public BooksController(IBookService books, ICategoryService categories)
+        public BooksController(
+            IBookService books,
+            ICategoryService categories,
+            IAuthorService authors)
         {
             this.books = books;
             this.categories = categories;
+            this.authors = authors;
         }
 
         [HttpGet(WithId)]
         public async Task<IActionResult> Get(int id)
-            => this.OkOrNotFound(await this.books.ById(id));
+            => this.OkOrNotFound(await this.books.ByIdAsync(id));
 
         [HttpGet]
         public async Task<IActionResult> Search([FromQuery]string search = "")
@@ -30,29 +35,43 @@
 
         [HttpPut(WithId)]
         [ValidateModelState]
-        public async Task<IActionResult> Put(int id, [FromBody]BookPutRequestModel model)
-        {
-            var success = await this.books.Edit(id, model.Title, model.Description, model.Price,
-                                              model.Copies, model.Edition, model.AgeRestriction,
-                                              model.ReleaseDate, model.AuthorId);
-
-            return this.OkOrBadRequest(success);
-        }
+        public async Task<IActionResult> Put(int id, [FromBody]BookEditRequestModel model)
+            => this.OkOrNotFound(await this.books.EditAsync(
+                        id,
+                        model.Title,
+                        model.Description,
+                        model.Price,
+                        model.Copies,
+                        model.Edition,
+                        model.AgeRestriction,
+                        model.ReleaseDate,
+                        model.AuthorId));
 
         [HttpDelete(WithId)]
         public async Task<IActionResult> Delete(int id)
-            => this.OkOrBadRequest(await this.books.Delete(id));
+            => this.OkOrBadRequest(await this.books.DeleteAsync(id));
 
         [HttpPost]
         [ValidateModelState]
-        public async Task<IActionResult> Post([FromBody] BookPostRequestModel model)
+        public async Task<IActionResult> Post([FromBody] BookCreateRequestModel model)
         {
+            var authorExists = await this.authors.ExistsAsync(model.AuthorId);
+            if (!authorExists) return BadRequest("Author does not exists.");
+
             var categoryIds = await this.categories.CreateMultipleAsync(model.Categories);
 
-            var succeess = await this.books.Create(model.AuthorId, model.Title, model.Description,
-                                             model.Price, model.Copies,model.Edition, model.AgeRestriction,
-                                             model.ReleaseDate, categoryIds);
-            return this.OkOrBadRequest(succeess);
+            var bookId = await this.books.CreateAsync(
+                model.AuthorId,
+                model.Title,
+                model.Description,
+                model.Price,
+                model.Copies,
+                model.Edition,
+                model.AgeRestriction,
+                model.ReleaseDate,
+                categoryIds);
+
+            return this.OkOrNotFound(bookId);
         }
     }
 }

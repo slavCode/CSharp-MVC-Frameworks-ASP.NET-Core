@@ -8,13 +8,15 @@
     {
         Task<IEnumerable<CategoryServiceModel>> AllAsync();
 
-        Task<CategoryServiceModel> ByIdAsync(int id);
+        Task<CategoryServiceModel> FindAsync(int id);
 
-        Task<bool> EditAsync(int id, string name);
+        Task<bool> FindAsync(string name);
 
-        Task<bool> CreateAsync(string name);
+        Task<int?> CreateAsync(string name);
 
         Task<IEnumerable<int>> CreateMultipleAsync(string categoryNames);
+
+        Task<int?> EditAsync(int id, string name);
 
         Task<bool> DeleteAsync(int id);
     }

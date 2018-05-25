@@ -20,6 +20,8 @@
 
         public int Edition { get; set; }
 
+        public int? AgeRestriction { get; set; }
+
         public IEnumerable<string> Categories { get; set; }
 
         public virtual void ConfigureMapping(Profile mapper)
