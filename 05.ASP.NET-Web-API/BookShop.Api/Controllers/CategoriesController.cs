@@ -1,7 +1,9 @@
 ﻿namespace BookShop.Api.Controllers
 {
     using Infrastructure.Extensions;
+    using Infrastructure.Filters;
     using Microsoft.AspNetCore.Mvc;
+    using Models.Category;
     using Service;
     using System.Threading.Tasks;
 
@@ -23,6 +25,11 @@
         [HttpGet(WithId)]
         public async Task<IActionResult> Get(int id)
             => this.OkOrNotFound(await this.categories.ByIdAsync(id));
+
+        [HttpPut(WithId)]
+        [ValidateModelState]
+        public async Task<IActionResult> Put(int id, [FromBody]CategoryPutRequestModel model)
+            => this.OkOrBadRequest(await this.categories.EditAsync(id, model.Name));
 
     }
 }

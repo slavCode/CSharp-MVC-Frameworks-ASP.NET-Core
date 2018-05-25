@@ -32,6 +32,19 @@
                 .ProjectTo<CategoryServiceModel>()
                 .FirstOrDefaultAsync();
 
+        public async Task<bool> EditAsync(int id, string name)
+        {
+            var exist = await this.db.Categories.AnyAsync(c => c.Name == name);
+            if (exist) return false;
+
+            var category = await this.db.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            category.Name = name;
+
+            await this.db.SaveChangesAsync();
+
+            return true;
+        }
+
         public async Task<IEnumerable<int>> CreateMultipleAsync(string categoryNames)
         {
             if (string.IsNullOrEmpty(categoryNames)) return null;

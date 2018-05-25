@@ -29,10 +29,9 @@
             => this.OkOrNotFound(await this.books.FindAsync(search));
 
         [HttpPut(WithId)]
+        [ValidateModelState]
         public async Task<IActionResult> Put(int id, [FromBody]BookPutRequestModel model)
         {
-            if (model == null) return BadRequest();
-
             var success = await this.books.Edit(id, model.Title, model.Description, model.Price,
                                               model.Copies, model.Edition, model.AgeRestriction,
                                               model.ReleaseDate, model.AuthorId);
