@@ -67,5 +67,16 @@
 
             return categoryIds;
         }
+
+        public async Task<bool> DeleteAsync(int id)
+        {
+            var category = await this.db.Categories.FirstOrDefaultAsync(c => c.Id == id);
+            if (category == null) return false;
+
+            this.db.Remove(category);
+            await this.db.SaveChangesAsync();
+
+            return true;
+        }
     }
 }

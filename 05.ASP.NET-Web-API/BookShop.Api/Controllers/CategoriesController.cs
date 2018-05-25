@@ -31,5 +31,9 @@
         public async Task<IActionResult> Put(int id, [FromBody]CategoryPutRequestModel model)
             => this.OkOrBadRequest(await this.categories.EditAsync(id, model.Name));
 
+        [HttpDelete(WithId)]
+        public async Task<IActionResult> Delete(int id)
+            => this.OkOrBadRequest(await this.categories.DeleteAsync(id));
+
     }
 }
