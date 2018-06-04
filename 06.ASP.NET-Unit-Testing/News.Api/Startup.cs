@@ -2,13 +2,16 @@
 {
     using AutoMapper;
     using Data;
+    using Data.Models;
     using Infrastructure.Extensions;
     using Microsoft.AspNetCore.Builder;
     using Microsoft.AspNetCore.Hosting;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.EntityFrameworkCore;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Service;
+    using Service.Implementations;
 
     public class Startup
     {
@@ -23,6 +26,18 @@
         {
             services.AddDbContext<NewsDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+
+            services.AddIdentity<User, IdentityRole>(options =>
+                {
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireNonAlphanumeric = false;
+
+                })
+                .AddEntityFrameworkStores<NewsDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddTransient<IUserService, UserService>();
 
             services.AddTransient<INewsService, NewsService>();
 
@@ -41,6 +56,8 @@
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
 
             app.UseMvc();
         }

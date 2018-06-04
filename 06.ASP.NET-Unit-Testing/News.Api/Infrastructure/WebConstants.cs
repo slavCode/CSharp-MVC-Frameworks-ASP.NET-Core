@@ -4,6 +4,8 @@
     {
         public const string ApiNews = "/api/news";
 
-        public const string ApiNewsId = "/api/news/{id}";
+        public const string ApiUsers = "/api/users";
+
+        public const string WithId = "/api/news/{id}";
     }
 }

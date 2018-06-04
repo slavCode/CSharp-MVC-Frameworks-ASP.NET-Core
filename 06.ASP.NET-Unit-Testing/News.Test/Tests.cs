@@ -1,7 +1,7 @@
 ﻿namespace News.Test
 {
-    using Api.Infrastructure.Mapper;
     using AutoMapper;
+    using News.Api.Infrastructure.Mapper;
 
     public class Tests
     {
